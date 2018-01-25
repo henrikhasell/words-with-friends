@@ -7,16 +7,16 @@
 #include <SDL2/SDL.h>
 #include "grid.hpp"
 
-#define TILE_SIZE 32
+#define TILE_SIZE 50
 #define GLYPH_W 8
 #define GLYPH_H 8
-#define GRID_SIZE_X 11
-#define GRID_SIZE_Y 11
+#define GRID_SIZE_X 15
+#define GRID_SIZE_Y 15
 
 std::map<char, int> charScores;
 std::set<std::string> validWords;
-std::string available;
 
+static std::string input;
 static SDL_Rect src_rect;
 static SDL_Rect dst_rect;
 
@@ -66,8 +66,8 @@ int main(int argc, char *argv[])
 	{
 		SDL_Window *window = SDL_CreateWindow(
 			"Word Game",
-			SDL_WINDOWPOS_CENTERED,
-			SDL_WINDOWPOS_CENTERED,
+			SDL_WINDOWPOS_UNDEFINED,
+			SDL_WINDOWPOS_UNDEFINED,
 			TILE_SIZE * GRID_SIZE_X,
 			TILE_SIZE * (GRID_SIZE_Y + 1),
 			0);
@@ -100,12 +100,12 @@ int main(int argc, char *argv[])
 			charScores['Y'] = 3;
 			charScores['Z'] = 10;
 
-			Grid grid = Grid::Small();
+			Grid grid = Grid::Large();
 
-			load_words("dictionary.txt");
 			SDL_Surface *window_surface = SDL_GetWindowSurface(window);
 			SDL_Surface *text_surface = SDL_LoadBMP("Text.bmp");
 			SDL_SetColorKey(text_surface, SDL_TRUE, 0x000000);
+			load_words("dictionary.txt");
 			bool finished = false;
 			int cursor_x = 0;
 			int cursor_y = 0;
@@ -157,7 +157,7 @@ int main(int argc, char *argv[])
 
 				dst_rect.x = 0;
 				dst_rect.y = TILE_SIZE * GRID_SIZE_Y;
-				dst_rect.w = TILE_SIZE * 11;
+				dst_rect.w = TILE_SIZE * GRID_SIZE_X;
 				dst_rect.h = TILE_SIZE;
 
 				SDL_FillRect(window_surface, &dst_rect, 0x000000);
@@ -173,15 +173,15 @@ int main(int argc, char *argv[])
 				{
 					render_glyph(
 						window_surface, text_surface,
-						(int)available.length(),
+						(int)input.length(),
 						(int)GRID_SIZE_Y, 224);
 				}
 
-				for(int i = 0; i < available.length(); i++)
+				for(int i = 0; i < input.length(); i++)
 				{
 					render_glyph(
 						window_surface, text_surface, i,
-						GRID_SIZE_Y, available[i]);
+						GRID_SIZE_Y, input[i]);
 				}
 
 				SDL_UpdateWindowSurface(window);
@@ -205,7 +205,7 @@ int main(int argc, char *argv[])
 						}
 						else
 						{
-							available += e.text.text;
+							input += e.text.text;
 						}
 					}
 					else if(e.type == SDL_KEYDOWN)
@@ -258,18 +258,18 @@ int main(int argc, char *argv[])
 							}
 							else
 							{
-								grid.calculateBestMove(available);
+								grid.calculateBestMove(input);
 								std::cout << "Done!" << std::endl;
 							}
 							break;
 						case SDLK_BACKSPACE:
-							if(available.length() > 0)
+							if(input.length() > 0)
 							{
-								available.pop_back();
+								input.pop_back();
 							}
 							break;
 						case SDLK_INSERT:
-							grid.insert(cursor_x, cursor_y, false, available);
+							grid.insert(cursor_x, cursor_y, false, input);
 							break;
 						}
 					}

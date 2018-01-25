@@ -1,4 +1,5 @@
 #include "permutation.hpp"
+#include <algorithm>
 #include <iostream>
 
 const char Permutation::wildcard_values[26] = {
@@ -12,11 +13,26 @@ const char Permutation::wildcard_values[26] = {
 Permutation::Permutation(std::string input)
 {
 	iteration(input, "");
+
+	for(const char &letter : input)
+	{
+		if(letter == '*')
+		{
+			// TODO: Remove this.
+			input.erase(std::remove(input.begin(), input.end(), '*'), input.end());
+
+			for(const char &wildcard : wildcard_values)
+			{
+				iteration(input + wildcard, "");
+			}
+		}
+	}
+
 }
 
 void Permutation::iteration(std::string str, std::string res)
 {
-	results.push_back(res);
+	results.insert(res);
 
 	for(size_t i = 0; i < str.length(); i++)
 	{

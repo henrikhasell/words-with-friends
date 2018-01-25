@@ -238,7 +238,7 @@ void Grid::calculateBestMove(std::string available)
 
 	for(const bool orientation : { true, false })
 	{
-		for(std::string &i : permutation.results)
+		for(const std::string &i : permutation.results)
 		{
 			for(size_t x = 0; x < w; x++)
 			{
@@ -254,15 +254,8 @@ void Grid::calculateBestMove(std::string available)
 						if(curr_score > best_score)
 						{
 							std::cout <<
-								"Found new word placement: " <<
-								i <<
-								" at (" <<
-								x <<
-								", " <<
-								y <<
-								") for " <<
-								curr_score - this->score() <<
-								" points." <<
+								"Found new word placement: " << i <<
+								" at (" << x << ", " << y << ")" <<
 								std::endl;
 							best = copy;
 						}
@@ -403,7 +396,7 @@ bool Grid::validate()
 
 	if(result)
 	{
-		message = "Validation successfull (" + std::to_string(score()) + " points).";
+		message = "Validation successfull.";
 	}
 
 	return result;
