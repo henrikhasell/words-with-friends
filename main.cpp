@@ -208,6 +208,26 @@ int main(int argc, char *argv[])
 							input += e.text.text;
 						}
 					}
+					else if(e.type == SDL_MOUSEBUTTONDOWN)
+					{
+						if(e.button.windowID && e.button.button == SDL_BUTTON_LEFT)
+						{
+							size_t xCoord = e.button.x / TILE_SIZE;
+							size_t yCoord = e.button.y / TILE_SIZE;
+
+							if(yCoord >= grid.h)
+							{
+								input_mode = Available;
+							}
+							else
+							{
+								input_mode = Board;
+							}
+
+							cursor_x = std::min(grid.w - 1, xCoord);
+							cursor_y = std::min(grid.h - 1, yCoord);
+						}
+					}
 					else if(e.type == SDL_KEYDOWN)
 					{
 						switch(e.key.keysym.sym)
