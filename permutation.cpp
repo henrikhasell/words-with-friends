@@ -12,7 +12,9 @@ const char Permutation::wildcard_values[26] = {
 
 Permutation::Permutation(std::string input)
 {
-	iteration(input, "");
+	std::set<std::string> uniquePermutations;
+
+	iteration(uniquePermutations, input, "");
 
 	for(const char &letter : input)
 	{
@@ -23,19 +25,24 @@ Permutation::Permutation(std::string input)
 
 			for(const char &wildcard : wildcard_values)
 			{
-				iteration(input + wildcard, "");
+				iteration(uniquePermutations, input + wildcard, "");
 			}
 		}
 	}
 
+	// TODO: Resize vector before this.
+	std::copy(
+		uniquePermutations.begin(),
+		uniquePermutations.end(),
+		std::back_inserter(results));
 }
 
-void Permutation::iteration(std::string str, std::string res)
+void Permutation::iteration(std::set<std::string> &uniquePermutations, std::string str, std::string res)
 {
-	results.insert(res);
+	uniquePermutations.insert(res);
 
 	for(size_t i = 0; i < str.length(); i++)
 	{
-		iteration(std::string(str).erase(i, 1), res + str[i]);
+		iteration(uniquePermutations, std::string(str).erase(i, 1), res + str[i]);
 	}
 }
