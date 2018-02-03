@@ -1,5 +1,6 @@
 #include "grid.hpp"
 #include "permutation.hpp"
+#include <chrono>
 #include <iostream>
 #include <new>
 #include <queue>
@@ -236,6 +237,9 @@ void Grid::calculateBestMove(std::string available)
 
 	Grid best = *this;
 
+	std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
+	std::chrono::steady_clock::time_point t2;
+
 	for(const bool orientation : { true, false })
 	{
 		for(const std::string &i : permutation.results)
@@ -253,10 +257,6 @@ void Grid::calculateBestMove(std::string available)
 
 						if(curr_score > best_score)
 						{
-							std::cout <<
-								"Found new word placement: " << i <<
-								" at (" << x << ", " << y << ")" <<
-								std::endl;
 							best = copy;
 						}
 					}
@@ -264,6 +264,13 @@ void Grid::calculateBestMove(std::string available)
 			}
 		}
 	}
+
+	t2 = std::chrono::steady_clock::now();
+
+	std::chrono::duration<double> timeElapsedDuration =
+		std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
+
+	std::cout << "Time elapsed: " << timeElapsedDuration.count() << "seconds" << std::endl;
 
 	*this = best;
 }

@@ -7,11 +7,11 @@
 #include <SDL2/SDL.h>
 #include "grid.hpp"
 
-#define TILE_SIZE 50
+#define TILE_SIZE 30
 #define GLYPH_W 8
 #define GLYPH_H 8
-#define GRID_SIZE_X 11
-#define GRID_SIZE_Y 11
+#define GRID_SIZE_X 15
+#define GRID_SIZE_Y 15
 
 std::map<char, int> charScores;
 std::set<std::string> validWords;
@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
 			charScores['Y'] = 3;
 			charScores['Z'] = 10;
 
-			Grid grid = Grid::Small();
+			Grid grid = Grid::Large();
 
 			SDL_Surface *window_surface = SDL_GetWindowSurface(window);
 			SDL_Surface *text_surface = SDL_LoadBMP("Text.bmp");
