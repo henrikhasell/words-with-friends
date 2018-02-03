@@ -10,8 +10,8 @@
 #define TILE_SIZE 50
 #define GLYPH_W 8
 #define GLYPH_H 8
-#define GRID_SIZE_X 15
-#define GRID_SIZE_Y 15
+#define GRID_SIZE_X 11
+#define GRID_SIZE_Y 11
 
 std::map<char, int> charScores;
 std::set<std::string> validWords;
@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
 			charScores['Y'] = 3;
 			charScores['Z'] = 10;
 
-			Grid grid = Grid::Large();
+			Grid grid = Grid::Small();
 
 			SDL_Surface *window_surface = SDL_GetWindowSurface(window);
 			SDL_Surface *text_surface = SDL_LoadBMP("Text.bmp");
@@ -111,83 +111,8 @@ int main(int argc, char *argv[])
 			int cursor_y = 0;
 			while(!finished)
 			{
-				for(int x = 0; x < grid.w; x++)
-				{
-					for(int y = 0; y < grid.h; y++)
-					{
-						const Grid::Tile *tile = grid.getTile(x, y);
-
-						dst_rect.x = x * TILE_SIZE;
-						dst_rect.y = y * TILE_SIZE;
-						dst_rect.w = TILE_SIZE;
-						dst_rect.h = TILE_SIZE;
-
-						Uint32 colour;
-
-						if(tile->value != ' ')
-						{
-							colour = 0xf0b432;
-						}
-						else
-						{
-							switch(tile->type)
-							{
-							case Grid::Tile::Normal:
-								colour = 0xdee4ea; break;
-							case Grid::Tile::DoubleWord:
-								colour = 0xb3554d; break;
-							case Grid::Tile::DoubleLetter:
-								colour = 0x1181be; break;
-							case Grid::Tile::TrippleWord:
-								colour = 0xea9932; break;
-							case Grid::Tile::TrippleLetter:
-								colour = 0x6ea256; break;
-							case Grid::Tile::Start:
-								colour = 0x78569a; break;
-							}
-						}
-						SDL_FillRect(window_surface, &dst_rect, colour);
-						if(tile->value != ' ')
-						{
-							render_glyph(
-								window_surface, text_surface, x, y, tile->value);
-						}
-					}
-				}
-
-				dst_rect.x = 0;
-				dst_rect.y = TILE_SIZE * GRID_SIZE_Y;
-				dst_rect.w = TILE_SIZE * GRID_SIZE_X;
-				dst_rect.h = TILE_SIZE;
-
-				SDL_FillRect(window_surface, &dst_rect, 0x000000);
-
-				if(input_mode == Board)
-				{
-					render_glyph(
-						window_surface, text_surface,
-						cursor_x,
-						cursor_y, 224);
-				}
-				else
-				{
-					render_glyph(
-						window_surface, text_surface,
-						(int)input.length(),
-						(int)GRID_SIZE_Y, 224);
-				}
-
-				for(int i = 0; i < input.length(); i++)
-				{
-					render_glyph(
-						window_surface, text_surface, i,
-						GRID_SIZE_Y, input[i]);
-				}
-
-				SDL_UpdateWindowSurface(window);
-
 				SDL_Event e;
-				while(SDL_PollEvent(&e) != 0)
+				while(SDL_WaitEvent(&e) != 0)
 				{
 					if(e.type == SDL_QUIT)
 					{
@@ -293,6 +218,80 @@ int main(int argc, char *argv[])
 							break;
 						}
 					}
+
+					for(int x = 0; x < grid.w; x++)
+					{
+						for(int y = 0; y < grid.h; y++)
+						{
+							const Grid::Tile *tile = grid.getTile(x, y);
+
+							dst_rect.x = x * TILE_SIZE;
+							dst_rect.y = y * TILE_SIZE;
+							dst_rect.w = TILE_SIZE;
+							dst_rect.h = TILE_SIZE;
+
+							Uint32 colour;
+
+							if(tile->value != ' ')
+							{
+								colour = 0xf0b432;
+							}
+							else
+							{
+								switch(tile->type)
+								{
+								case Grid::Tile::Normal:
+									colour = 0xdee4ea; break;
+								case Grid::Tile::DoubleWord:
+									colour = 0xb3554d; break;
+								case Grid::Tile::DoubleLetter:
+									colour = 0x1181be; break;
+								case Grid::Tile::TrippleWord:
+									colour = 0xea9932; break;
+								case Grid::Tile::TrippleLetter:
+									colour = 0x6ea256; break;
+								case Grid::Tile::Start:
+									colour = 0x78569a; break;
+								}
+							}
+							SDL_FillRect(window_surface, &dst_rect, colour);
+							if(tile->value != ' ')
+							{
+								render_glyph(
+									window_surface, text_surface, x, y, tile->value);
+							}
+						}
+					}
+
+					dst_rect.x = 0;
+					dst_rect.y = TILE_SIZE * GRID_SIZE_Y;
+					dst_rect.w = TILE_SIZE * GRID_SIZE_X;
+					dst_rect.h = TILE_SIZE;
+
+					SDL_FillRect(window_surface, &dst_rect, 0x000000);
+
+					if(input_mode == Board)
+					{
+						render_glyph(
+							window_surface, text_surface,
+							cursor_x,
+							cursor_y, 224);
+					}
+					else
+					{
+						render_glyph(
+							window_surface, text_surface,
+							(int)input.length(),
+							(int)GRID_SIZE_Y, 224);
+					}
+
+					for(int i = 0; i < input.length(); i++)
+					{
+						render_glyph(
+							window_surface, text_surface, i,
+							GRID_SIZE_Y, input[i]);
+					}
+					SDL_UpdateWindowSurface(window);
 				}
 			}
 			SDL_FreeSurface(text_surface);
