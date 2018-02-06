@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <map>
@@ -15,6 +16,7 @@
 
 std::map<char, int> charScores;
 std::set<std::string> validWords;
+std::string message;
 
 static std::string input;
 static SDL_Rect src_rect;
@@ -30,7 +32,7 @@ static InputMode input_mode = Board;
 void render_glyph(
 	SDL_Surface *dst_surface,
 	SDL_Surface *src_surface,
-	int x, int y,
+	int x, int y, int w, int h,
 	unsigned char value)
 {
 	src_rect.x = GLYPH_W * (value % 16);
@@ -38,13 +40,22 @@ void render_glyph(
 	src_rect.w = GLYPH_W;
 	src_rect.h = GLYPH_H;
 
-	dst_rect.x = TILE_SIZE * x;
-	dst_rect.y = TILE_SIZE * y;
-	dst_rect.w = TILE_SIZE;
-	dst_rect.h = TILE_SIZE;
+	dst_rect.x = w * x;
+	dst_rect.y = h * y;
+	dst_rect.w = w;
+	dst_rect.h = h;
 
 	SDL_BlitScaled(
 		src_surface, &src_rect, dst_surface, &dst_rect);
+}
+
+void render_glyph(
+	SDL_Surface *dst_surface,
+	SDL_Surface *src_surface,
+	int x, int y,
+	unsigned char value)
+{
+	render_glyph(dst_surface, src_surface, x, y, TILE_SIZE, TILE_SIZE, value);
 }
 
 void load_words(const char path[])
@@ -127,6 +138,8 @@ int main(int argc, char *argv[])
 								grid.getTile(cursor_x, cursor_y);
 							selected->value = e.text.text[0];
 							selected->bonus = true;
+
+							grid.validate();
 						}
 						else
 						{
@@ -199,12 +212,10 @@ int main(int argc, char *argv[])
 							if(input_mode == Board)
 							{
 								grid.validate();
-								std::cout << grid.message << std::endl;
 							}
 							else
 							{
 								grid.calculateBestMove(input);
-								std::cout << "Done!" << std::endl;
 							}
 							break;
 						case SDLK_BACKSPACE:
@@ -219,9 +230,9 @@ int main(int argc, char *argv[])
 						}
 					}
 
-					for(int x = 0; x < grid.w; x++)
+					for(size_t x = 0; x < grid.w; x++)
 					{
-						for(int y = 0; y < grid.h; y++)
+						for(size_t y = 0; y < grid.h; y++)
 						{
 							const Grid::Tile *tile = grid.getTile(x, y);
 
@@ -291,6 +302,15 @@ int main(int argc, char *argv[])
 							window_surface, text_surface, i,
 							GRID_SIZE_Y, input[i]);
 					}
+
+
+					for(int i = 0; i < message.length(); i++)
+					{
+						render_glyph(
+							window_surface, text_surface, i, 0,
+							16, 16, message[i]);
+					}
+
 					SDL_UpdateWindowSurface(window);
 				}
 			}

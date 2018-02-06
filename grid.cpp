@@ -5,6 +5,8 @@
 #include <new>
 #include <queue>
 
+extern std::string message;
+
 Grid::Tile::Tile() : value(' '), bonus(false), type(Tile::Normal)
 {
 
@@ -271,6 +273,8 @@ void Grid::calculateBestMove(std::string available)
 		std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
 
 	std::cout << "Time elapsed: " << timeElapsedDuration.count() << "seconds" << std::endl;
+
+	message = "Done!";
 
 	*this = best;
 }

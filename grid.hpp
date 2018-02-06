@@ -23,9 +23,9 @@ public:
 			Start
 		};
 		Tile();
-		char value;
-		bool bonus;// Should multipliers be applied in scoring.
-		Type type;
+		char value; // Char on tile.
+		bool bonus; // Apply multiplier.
+		Type type; // Multiplier type.
 	};
 
 	static Grid Large();
@@ -47,7 +47,6 @@ public:
 
 	size_t w; // Should be private.
 	size_t h;// Should be private.
-	std::string message;// Should be private.
 private:
 	Tile *tiles;
 };
