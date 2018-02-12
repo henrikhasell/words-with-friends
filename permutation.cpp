@@ -14,17 +14,11 @@ Permutation::Permutation(std::string input)
 {
 	iteration(input, "");
 
-	for(const char &letter : input)
+	if(wild)
 	{
-		if(letter == '*')
+		for(const char &wildcard : wildcard_values)
 		{
-			// TODO: Remove this.
-			input.erase(std::remove(input.begin(), input.end(), '*'), input.end());
-
-			for(const char &wildcard : wildcard_values)
-			{
-				iteration(input + wildcard, "");
-			}
+			iteration(input + wildcard, "");
 		}
 	}
 
@@ -36,6 +30,13 @@ void Permutation::iteration(std::string str, std::string res)
 
 	for(size_t i = 0; i < str.length(); i++)
 	{
-		iteration(std::string(str).erase(i, 1), res + str[i]);
+		if(str[i] == '*')
+		{
+			wild = true;
+		}
+		else
+		{
+			iteration(std::string(str).erase(i, 1), res + str[i]);
+		}
 	}
 }

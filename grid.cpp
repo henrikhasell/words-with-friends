@@ -272,8 +272,7 @@ void Grid::calculateBestMove(std::string available)
 	std::chrono::duration<double> timeElapsedDuration =
 		std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
 
-	std::cout << "Time elapsed: " << timeElapsedDuration.count() << "seconds" << std::endl;
-
+	std::cout << "Time elapsed: " << timeElapsedDuration.count() << " seconds." << std::endl;
 	message = "Done!";
 
 	*this = best;
