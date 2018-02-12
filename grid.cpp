@@ -7,7 +7,7 @@
 
 extern std::string message;
 
-Grid::Tile::Tile() : value(' '), bonus(false), type(Tile::Normal)
+Grid::Tile::Tile() : value(' '), type(Tile::Normal)
 {
 
 }
@@ -219,7 +219,6 @@ void Grid::insert(size_t x, size_t y, bool horizontal, std::string word)
 		if(tile->value == ' ')
 		{
 			tile->value = word[index++];
-			tile->bonus = true;
 		}
 
 		indices.push_back(index);
@@ -232,15 +231,12 @@ void Grid::calculateBestMove(std::string available)
 {
 	Permutation permutation(available);
 
-	for(size_t i = 0; i < w * h; i++)
-	{
-		tiles[i].bonus = false;
-	}
-
 	Grid best = *this;
 
 	std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
 	std::chrono::steady_clock::time_point t2;
+
+	int best_score = this->score();
 
 	for(const bool orientation : { true, false })
 	{
@@ -254,11 +250,11 @@ void Grid::calculateBestMove(std::string available)
 					copy.insert(x, y, orientation, i);
 					if(copy.validate())
 					{
-						int curr_score = copy.score();
-						int best_score = best.score();
+						int copy_score = copy.score();
 
-						if(curr_score > best_score)
+						if(copy_score > best_score)
 						{
+							best_score = copy_score;
 							best = copy;
 						}
 					}
@@ -273,6 +269,7 @@ void Grid::calculateBestMove(std::string available)
 		std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
 
 	std::cout << "Time elapsed: " << timeElapsedDuration.count() << " seconds." << std::endl;
+	std::cout << "Best score: " << (best_score - this->score()) << std::endl;
 	message = "Done!";
 
 	*this = best;
@@ -415,6 +412,7 @@ bool Grid::validate()
 int Grid::score()
 {
 	int total = 0;
+
 	for(const bool horizontal : {true, false})
 	{
 		size_t i;
@@ -463,15 +461,12 @@ int Grid::score()
 
 						for(Tile *tile : word)
 						{
-							if(tile->bonus)
+							switch(tile->type)
 							{
-								switch(tile->type)
-								{
-								case Tile::DoubleWord:
-									word_multiplier *= 2; break;
-								case Tile::TrippleWord:
-									word_multiplier *= 3; break;
-								}
+							case Tile::DoubleWord:
+								word_multiplier *= 2; break;
+							case Tile::TrippleWord:
+								word_multiplier *= 3; break;
 							}
 						}
 
@@ -479,15 +474,12 @@ int Grid::score()
 						{
 							int tile_multiplier = 1;
 
-							if(tile->bonus)
+							switch(tile->type)
 							{
-								switch(tile->type)
-								{
-								case Tile::DoubleLetter:
-									tile_multiplier = 2; break;
-								case Tile::TrippleLetter:
-									tile_multiplier = 3; break;
-								}
+							case Tile::DoubleLetter:
+								tile_multiplier = 2; break;
+							case Tile::TrippleLetter:
+								tile_multiplier = 3; break;
 							}
 
 							total += charScores[toupper(tile->value)] * tile_multiplier * word_multiplier;

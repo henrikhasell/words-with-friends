@@ -111,15 +111,26 @@ int main(int argc, char *argv[])
 			charScores['Y'] = 3;
 			charScores['Z'] = 10;
 
-			Grid grid = Grid::Large();
+			bool small = false;
+
+			for(int i = 0; i < argc; i++)
+			{
+				if(strcmp(argv[i], "--small") == 0)
+				{
+					small = true;
+					break;
+				}
+			}
+
+			Grid grid = small ? Grid::Small() : Grid::Large();
 
 			SDL_Surface *window_surface = SDL_GetWindowSurface(window);
 			SDL_Surface *text_surface = SDL_LoadBMP("Text.bmp");
 			SDL_SetColorKey(text_surface, SDL_TRUE, 0x000000);
 			load_words("dictionary.txt");
 			bool finished = false;
-			int cursor_x = 0;
-			int cursor_y = 0;
+			size_t cursor_x = 0;
+			size_t cursor_y = 0;
 			while(!finished)
 			{
 				SDL_Event e;
@@ -134,11 +145,7 @@ int main(int argc, char *argv[])
 					{
 						if(input_mode == Board)
 						{
-							Grid::Tile *selected =
-								grid.getTile(cursor_x, cursor_y);
-							selected->value = e.text.text[0];
-							selected->bonus = true;
-
+							grid.getTile(cursor_x, cursor_y)->value = e.text.text[0];
 							grid.validate();
 						}
 						else
@@ -236,8 +243,8 @@ int main(int argc, char *argv[])
 						{
 							const Grid::Tile *tile = grid.getTile(x, y);
 
-							dst_rect.x = x * TILE_SIZE;
-							dst_rect.y = y * TILE_SIZE;
+							dst_rect.x = (int)x * TILE_SIZE;
+							dst_rect.y = (int)y * TILE_SIZE;
 							dst_rect.w = TILE_SIZE;
 							dst_rect.h = TILE_SIZE;
 
@@ -269,7 +276,7 @@ int main(int argc, char *argv[])
 							if(tile->value != ' ')
 							{
 								render_glyph(
-									window_surface, text_surface, x, y, tile->value);
+									window_surface, text_surface, (int)x, (int)y, tile->value);
 							}
 						}
 					}
@@ -285,8 +292,8 @@ int main(int argc, char *argv[])
 					{
 						render_glyph(
 							window_surface, text_surface,
-							cursor_x,
-							cursor_y, 224);
+							(int)cursor_x,
+							(int)cursor_y, 224);
 					}
 					else
 					{
@@ -318,9 +325,14 @@ int main(int argc, char *argv[])
 		}
 		else
 		{
-			std::cout << "SDL_CreateWindow: " << SDL_GetError() << std::endl;
+			std::cerr << "SDL_CreateWindow: " << SDL_GetError() << std::endl;
 		}
 		SDL_Quit();
 	}
+	else
+	{
+		std::cerr << "SDL_Init: " << SDL_GetError() << std::endl;
+	}
+
 	return 0;
 }

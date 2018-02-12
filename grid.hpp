@@ -23,9 +23,8 @@ public:
 			Start
 		};
 		Tile();
-		char value; // Char on tile.
-		bool bonus; // Apply multiplier.
-		Type type; // Multiplier type.
+		char value;
+		Type type;
 	};
 
 	static Grid Large();
