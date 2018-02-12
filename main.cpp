@@ -148,7 +148,7 @@ int main(int argc, char *argv[])
 							grid.getTile(cursor_x, cursor_y)->value = e.text.text[0];
 							grid.validate();
 						}
-						else
+						else if(input.length() < 7)
 						{
 							input += e.text.text;
 						}
