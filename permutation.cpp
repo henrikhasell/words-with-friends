@@ -10,7 +10,14 @@ const char Permutation::wildcard_values[26] = {
 	'y', 'z'
 };
 
-Permutation::Permutation(std::string input)
+Permutation::Permutation(
+	std::string input,
+	size_t x,
+	size_t y,
+	size_t offset,
+	bool horizontal
+) :
+	x(x), y(y), offset(offset), horizontal(horizontal)
 {
 	iteration(input, "");
 

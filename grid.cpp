@@ -229,7 +229,7 @@ void Grid::insert(size_t x, size_t y, bool horizontal, std::string word)
 
 void Grid::calculateBestMove(std::string available)
 {
-	Permutation permutation(available);
+	calculatePlacements();
 
 	Grid best = *this;
 
@@ -238,27 +238,17 @@ void Grid::calculateBestMove(std::string available)
 
 	int best_score = this->score();
 
-	for(const bool orientation : { true, false })
+	for(const Placement &placement : placements)
 	{
-		for(const std::string &i : permutation.results)
+		for(size_t offset = 0; offset <= available.length(); offset++)
 		{
-			for(size_t x = 0; x < w; x++)
+			if(placement.right)
 			{
-				for(size_t y = 0; y < h; y++)
-				{
-					Grid copy = *this;
-					copy.insert(x, y, orientation, i);
-					if(copy.validate())
-					{
-						int copy_score = copy.score();
-
-						if(copy_score > best_score)
-						{
-							best_score = copy_score;
-							best = copy;
-						}
-					}
-				}
+				Permutation permutation(available, placement.x, placement.y, true);
+			}
+			if(placement.down)
+			{
+				Permutation permutation(available, placement.x, placement.y, false);
 			}
 		}
 	}
@@ -273,6 +263,48 @@ void Grid::calculateBestMove(std::string available)
 	message = "Done!";
 
 	*this = best;
+}
+
+void Grid::calculatePlacements()
+{
+	placements.clear();
+
+	for(size_t x = 0; x < w; x++)
+	{
+		for(size_t y = 0; y < h; y++)
+		{
+			if(getTile(x, y)->value != ' ')
+			{
+				Placement placement;
+
+				placement.down = y == 0 || getTile(x, y - 1)->value == ' ';
+				placement.right = x == 0 || getTile(x - 1, y)->value == ' ';
+				
+				if(placement.down || placement.right)
+				{
+					placement.x = x;
+					placement.y = y;
+
+					placements.push_back(placement);
+				}
+			}
+		}
+	}
+	
+	if(placements.empty())
+	{
+		Placement placement;
+		placement.x = w / 2;
+		placement.y = h / 2;
+		placement.down = true;
+		placement.right = true;
+		placements.push_back(placement);
+	}
+	
+	for(const Placement &placement : placements)
+	{
+		std::cout << "Found placement " << placement.x << ", " << placement.y << ": " << placement.down << " " << placement.right << std::endl;
+	}
 }
 
 bool Grid::validateWords(bool horizontal)

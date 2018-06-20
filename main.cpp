@@ -146,6 +146,7 @@ int main(int argc, char *argv[])
 						if(input_mode == Board)
 						{
 							grid.getTile(cursor_x, cursor_y)->value = e.text.text[0];
+							grid.calculatePlacements();
 							grid.validate();
 						}
 						else if(input.length() < 7)
