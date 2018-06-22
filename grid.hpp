@@ -5,9 +5,10 @@
 #include <set>
 #include <string>
 #include <vector>
+#include "trie.hpp"
 
 extern std::map<char, int> charScores;
-extern std::set<std::string> validWords;
+extern Trie validWords;
 
 class Grid
 {
@@ -47,6 +48,7 @@ public:
 
 	Tile *getTile(size_t x, size_t y);
 	void insert(size_t x, size_t y, bool horizontal, std::string word);
+	void fetch(size_t x, size_t y, bool horizontal, std::string &word);
 	void calculateBestMove(std::string characters);
 	void calculatePlacements();
 	bool validateWords(bool horizontal);

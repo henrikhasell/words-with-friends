@@ -7,6 +7,7 @@
 #include <vector>
 #include <SDL2/SDL.h>
 #include "grid.hpp"
+#include "trie.hpp"
 
 #define TILE_SIZE 30
 #define GLYPH_W 8
@@ -15,7 +16,7 @@
 #define GRID_SIZE_Y 15
 
 std::map<char, int> charScores;
-std::set<std::string> validWords;
+Trie validWords;
 std::string message;
 
 static std::string input;

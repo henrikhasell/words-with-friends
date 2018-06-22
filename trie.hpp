@@ -12,7 +12,7 @@ class Segment;
 class Trie
 {
 public:
-	bool contains(const std::string &string) const;
+	bool contains(const std::string &string, bool *valid = nullptr) const;
 	void insert(const std::string &string);
 protected:
 	std::set<Segment> children;

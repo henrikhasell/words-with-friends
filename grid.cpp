@@ -205,7 +205,6 @@ void Grid::insert(size_t x, size_t y, bool horizontal, std::string word)
 	}
 
 	size_t index = 0;
-	std::vector<size_t> indices;
 
 	while(*i < i_max)
 	{
@@ -221,8 +220,35 @@ void Grid::insert(size_t x, size_t y, bool horizontal, std::string word)
 			tile->value = word[index++];
 		}
 
-		indices.push_back(index);
+		i[0]++;
+	}
+}
 
+void Grid::fetch(size_t x, size_t y, bool horizontal, std::string &word)
+{
+	size_t *i;
+	size_t i_max;
+
+	if(horizontal)
+	{
+		i = &x;
+		i_max = w;
+	}
+	else
+	{
+		i = &y;
+		i_max = h;
+	}
+
+	while(*i < i_max)
+	{
+		Tile *tile = getTile(x, y);
+
+		if(tile->value == ' ')
+		{
+			break;
+		}
+		word += tile->value;
 		i[0]++;
 	}
 }
@@ -355,7 +381,8 @@ bool Grid::validateWords(bool horizontal)
 					{
 						i = toupper(i);
 					}
-					if(validWords.find(word) == validWords.end())
+					bool valid;
+					if(!validWords.contains(word, &valid) || !valid)
 					{
 						message = "Invalid word: " + word;
 						return false;

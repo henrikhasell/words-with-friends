@@ -3,25 +3,26 @@
 
 #include <string>
 #include <set>
+#include "grid.hpp"
 
 class Permutation
 {
-	static const char wildcard_values[26];
+	//static const char wildcard_values[26];
 public:
-	Permutation( input,
-	size_t x,
-	size_t y,
-	size_t offset,
-	bool horizon
-	std::stringtal);
+	Permutation(
+		std::string input,
+		size_t x,
+		size_t y,
+		bool horizontal,
+		const Grid &grid);
+
 	std::set<std::string> results;
 private:
 	void iteration(std::string str, std::string res);
-	bool wild;
 	size_t x;
 	size_t y;
-	size_t offset;
 	bool horizontal;
+	const Grid *grid;
 };
 
 #endif
