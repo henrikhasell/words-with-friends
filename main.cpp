@@ -61,6 +61,7 @@ void render_glyph(
 
 void load_words(const char path[])
 {
+	/*
 	std::ifstream file;
 	file.open(path);
 
@@ -70,6 +71,14 @@ void load_words(const char path[])
 		for(char &i : word) i = toupper(i);
 		validWords.insert(word);
 	}
+	*/
+	validWords.display();
+	validWords.insert("test");
+	validWords.display();
+	validWords.insert("tester");
+	validWords.display();
+	validWords.insert("table");
+	validWords.display();
 }
 
 int main(int argc, char *argv[])

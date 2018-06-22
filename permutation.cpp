@@ -22,7 +22,10 @@ Permutation::Permutation(
 	horizontal(horizontal),
 	grid(&grid)
 {
-	iteration(input, "");
+	for(size_t i = 0; i < input.length(); i++)
+	{
+		iteration(std::string(input).erase(i, 1), std::string(1, input[i]));
+	}
 }
 
 void Permutation::iteration(std::string str, std::string res)

@@ -270,11 +270,45 @@ void Grid::calculateBestMove(std::string available)
 		{
 			if(placement.right)
 			{
-				Permutation permutation(available, placement.x, placement.y, true);
+				Permutation permutation(available, placement.x, placement.y, true, *this);
+
+				for(const std::string &result : permutation.results)
+				{
+					Grid copy = *this;
+					copy.insert(placement.x, placement.y, true, result);
+
+					if(copy.validate())
+					{
+						int copy_score = copy.score();
+
+						if(copy_score > best_score)
+						{
+							best_score = copy_score;
+							best = copy;
+						}
+					}
+				}
 			}
 			if(placement.down)
 			{
-				Permutation permutation(available, placement.x, placement.y, false);
+				Permutation permutation(available, placement.x, placement.y, false, *this);
+				
+				for(const std::string &result : permutation.results)
+				{
+					Grid copy = *this;
+					copy.insert(placement.x, placement.y, false, result);
+
+					if(copy.validate())
+					{
+						int copy_score = copy.score();
+
+						if(copy_score > best_score)
+						{
+							best_score = copy_score;
+							best = copy;
+						}
+					}
+				}
 			}
 		}
 	}
@@ -401,7 +435,7 @@ bool Grid::validateWords()
 	return validateWords(true) && validateWords(false);
 }
 
-bool Grid::validateLattice()
+bool Grid::validateLattice() const
 {
 	Grid copy = *this;
 
@@ -413,8 +447,8 @@ bool Grid::validateLattice()
 		std::tuple<size_t, size_t> &head =
 			open_set.front();
 
-		size_t x = std::get<0>(head);
-		size_t y = std::get<1>(head);
+		const size_t x = std::get<0>(head);
+		const size_t y = std::get<1>(head);
 
 		Tile *tile = copy.getTile(x, y);
 

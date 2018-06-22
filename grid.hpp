@@ -53,12 +53,12 @@ public:
 	void calculatePlacements();
 	bool validateWords(bool horizontal);
 	bool validateWords();
-	bool validateLattice();
+	bool validateLattice() const;
 	bool validate();
 	int score();
 
 	size_t w; // Should be private.
-	size_t h;// Should be private.
+	size_t h; // Should be private.
 private:
 	std::vector<Placement> placements;
 	Tile *tiles;
