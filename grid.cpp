@@ -240,6 +240,19 @@ void Grid::fetch(size_t x, size_t y, bool horizontal, std::string &word)
 		i_max = h;
 	}
 
+	while(*i > 0)
+	{
+		i[0]--;
+
+		Tile *tile = getTile(x, y);
+
+		if(tile->value == ' ')
+		{
+			i[0]++;
+			break;
+		}
+	}
+
 	while(*i < i_max)
 	{
 		Tile *tile = getTile(x, y);
