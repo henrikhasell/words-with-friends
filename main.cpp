@@ -61,24 +61,15 @@ void render_glyph(
 
 void load_words(const char path[])
 {
-	/*
 	std::ifstream file;
 	file.open(path);
 
 	std::string word;
 	while(file >> word)
 	{
-		for(char &i : word) i = toupper(i);
+		for(char &i : word) i = tolower(i);
 		validWords.insert(word);
 	}
-	*/
-	validWords.display();
-	validWords.insert("test");
-	validWords.display();
-	validWords.insert("tester");
-	validWords.display();
-	validWords.insert("table");
-	validWords.display();
 }
 
 int main(int argc, char *argv[])
@@ -156,7 +147,6 @@ int main(int argc, char *argv[])
 						if(input_mode == Board)
 						{
 							grid.getTile(cursor_x, cursor_y)->value = e.text.text[0];
-							grid.calculatePlacements();
 							grid.validate();
 						}
 						else if(input.length() < 7)

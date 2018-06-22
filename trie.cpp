@@ -33,7 +33,16 @@ void Trie::insert(const std::string &string)
 	}
 	else
 	{
-		((Segment)*iterator).insert(string.substr(1));
+	    Segment &segment = (Segment&)*iterator;
+
+	    if(string.length() == 1)
+        {
+            segment.valid = true;
+        }
+        else
+        {
+            segment.insert(string.substr(1));
+        }
 	}
 }
 

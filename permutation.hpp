@@ -7,7 +7,7 @@
 
 class Permutation
 {
-	//static const char wildcard_values[26];
+	static const char wildcard_values[26];
 public:
 	Permutation(
 		std::string input,
