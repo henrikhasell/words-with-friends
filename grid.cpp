@@ -268,39 +268,60 @@ void Grid::fetch(size_t x, size_t y, bool horizontal, std::string &word)
 
 void Grid::calculateBestMove(std::string available)
 {
+	calculatePlacmenets();
 	Grid best = *this;
-
 	std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
 	std::chrono::steady_clock::time_point t2;
 
 	int best_score = this->score();
 
-    for(const bool orientation : { true, false })
-    {
-        for(size_t x = 0; x < w; x++)
-        {
-            for(size_t y = 0; y < h; y++)
-            {
-                Permutation permutation(available, x, y, orientation, *this);
+    for(const Placement &placement : placements)
+	{
+		if(placement.right)
+		{
+			const bool orientation = true;
 
-                for(const std::string &result : permutation.results)
-                {
-                    Grid copy = *this;
-                    copy.insert(x, y, orientation, result);
-                    if(copy.validate())
-                    {
-                        int copy_score = copy.score();
+			Permutation permutation(available, placement.x, placement.y, orientation, *this);
 
-                        if(copy_score > best_score)
-                        {
-                            best_score = copy_score;
-                            best = copy;
-                        }
-                    }
-                }
-            }
-        }
-    }
+			for(const std::string &result : permutation.results)
+			{
+				Grid copy = *this;
+				copy.insert(placement.x, placement.y, orientation, result);
+				if(copy.validate())
+				{
+					int copy_score = copy.score();
+
+					if(copy_score > best_score)
+					{
+						best_score = copy_score;
+						best = copy;
+					}
+				}
+			}
+		}
+		if(placement.down)
+		{
+			const bool orientation = false;
+
+			Permutation permutation(available, placement.x, placement.y, orientation, *this);
+
+			for(const std::string &result : permutation.results)
+			{
+				Grid copy = *this;
+				copy.insert(placement.x, placement.y, orientation, result);
+				if(copy.validate())
+				{
+					int copy_score = copy.score();
+
+					if(copy_score > best_score)
+					{
+						best_score = copy_score;
+						best = copy;
+					}
+				}
+			}
+		}
+	}
 
 	t2 = std::chrono::steady_clock::now();
 
@@ -312,6 +333,47 @@ void Grid::calculateBestMove(std::string available)
 	message = "Done!";
 
 	*this = best;
+}
+void Grid::calculatePlacmenets()
+{
+	placements.clear();
+
+	for(size_t x = 0; x < w; x++)
+	{
+		for(size_t y = 0; y < h; y++)
+		{
+			const Tile *tile = getTile(x, y);
+
+			if(tile->value != ' ')
+			{
+				Placement placement;
+
+				placement.down = y == 0 || getTile(x, y - 1)->value == ' ';
+				placement.right = x == 0 || getTile(x - 1, y)->value == ' ';
+
+				if(placement.down || placement.right)
+				{
+					placement.x = x;
+					placement.y = y;
+
+					placements.push_back(placement);
+				}
+			}
+		}
+	}
+
+	if(placements.empty())
+	{
+		Placement placement;
+
+		placement.x = w / 2;
+		placement.y = h / 2;
+
+		placement.down = true;
+		placement.right = true;
+
+		placements.push_back(placement);
+	}
 }
 
 bool Grid::validateWords(bool horizontal)

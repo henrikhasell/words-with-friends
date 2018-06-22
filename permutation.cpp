@@ -24,7 +24,7 @@ Permutation::Permutation(
 {
 	for(size_t i = 0; i < input.length(); i++)
 	{
-		iteration(std::string(input).erase(i, 1), std::string(1, input[i]));
+		iteration(input, "");
 	}
 }
 
@@ -36,13 +36,14 @@ void Permutation::iteration(std::string str, std::string res)
 	std::string received;
 	copy.fetch(x, y, horizontal, received);
 
-	bool valid;
-	if(validWords.contains(received, &valid))
+	bool valid = false;
+	if(!res.length() || validWords.contains(received, &valid))
 	{
 		if(valid)
 		{
 			results.insert(res);
 		}
+
 		for(size_t i = 0; i < str.length(); i++)
 		{
 		    if(str[i] == '*')
