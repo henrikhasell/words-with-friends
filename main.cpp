@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
             SDL_WINDOWPOS_UNDEFINED,
             TILE_SIZE * GRID_SIZE_X,
             TILE_SIZE * (GRID_SIZE_Y + 1),
-            0);
+            SDL_WINDOW_RESIZABLE);
         if(window)
         {
             charScores['A'] = 1;
@@ -141,6 +141,13 @@ int main(int argc, char *argv[])
                     {
                         finished = true;
                         break;
+                    }
+                    else if(e.type == SDL_WINDOWEVENT)
+                    {
+                        if(e.window.event == SDL_WINDOWEVENT_RESIZED)
+                        {
+                            window_surface = SDL_GetWindowSurface(window);
+                        }
                     }
                     else if(e.type == SDL_TEXTINPUT)
                     {
@@ -310,7 +317,6 @@ int main(int argc, char *argv[])
                             window_surface, text_surface, i,
                             GRID_SIZE_Y, input[i]);
                     }
-
 
                     for(int i = 0; i < message.length(); i++)
                     {
