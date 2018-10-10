@@ -13,53 +13,44 @@ extern Trie validWords;
 class Grid
 {
 public:
-    struct Placement
+    struct Tile
     {
-        size_t x;
-        size_t y;
-        bool down;
-        bool right;
+        enum Type
+        {
+            Normal,
+            DoubleLetter,
+            DoubleWord,
+            TrippleLetter,
+            TrippleWord,
+            Start
+        };
+        Tile();
+        char value;
+        Type type;
     };
-	struct Tile
-    {
-		enum Type
-		{
-			Normal,
-			DoubleLetter,
-			DoubleWord,
-			TrippleLetter,
-			TrippleWord,
-			Start
-		};
-		Tile();
-		char value;
-		Type type;
-	};
 
-	static Grid Large();
-	static Grid Small();
+    static Grid Large();
+    static Grid Small();
 
-	Grid(size_t w, size_t h);
-	Grid(const Grid &grid);
-	~Grid();
-	Grid &operator=(const Grid &grid);
+    Grid(size_t w, size_t h);
+    Grid(const Grid &grid);
+    ~Grid();
+    Grid &operator=(const Grid &grid);
 
-	Tile *getTile(size_t x, size_t y);
-	void insert(size_t x, size_t y, bool horizontal, std::string word);
-	void fetch(size_t x, size_t y, bool horizontal, std::string &word);
+    Tile *getTile(size_t x, size_t y);
+    void insert(size_t x, size_t y, bool horizontal, std::string word);
+    void fetch(size_t x, size_t y, bool horizontal, std::string &word);
     void calculateBestMove(std::string characters);
-    void calculatePlacmenets();
-	bool validateWords(bool horizontal);
-	bool validateWords();
-	bool validateLattice() const;
-	bool validate();
-	int score();
+    bool validateWords(bool horizontal);
+    bool validateWords();
+    bool validateLattice() const;
+    bool validate();
+    int score();
 
-	size_t w; // Should be private.
-	size_t h; // Should be private.
+    size_t w; // Should be private.
+    size_t h; // Should be private.
 private:
-    std::vector<Placement> placements;
-	Tile *tiles;
+    Tile *tiles;
 };
 
 #endif
