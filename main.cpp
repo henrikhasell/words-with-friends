@@ -1,3 +1,7 @@
+#ifndef SDL_MAIN_HANDLED
+#define SDL_MAIN_HANDLED
+#endif
+
 #include <algorithm>
 #include <fstream>
 #include <iostream>
