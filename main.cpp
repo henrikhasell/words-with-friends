@@ -13,7 +13,7 @@
 #include "grid.hpp"
 #include "trie.hpp"
 
-#define TILE_SIZE 30
+#define TILE_SIZE 50
 #define GLYPH_W 8
 #define GLYPH_H 8
 #define GRID_SIZE_X 15
@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
             SDL_WINDOWPOS_UNDEFINED,
             TILE_SIZE * GRID_SIZE_X,
             TILE_SIZE * (GRID_SIZE_Y + 1),
-            SDL_WINDOW_RESIZABLE);
+            0);
         if(window)
         {
             charScores['A'] = 1;

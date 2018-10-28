@@ -206,18 +206,14 @@ void Grid::insert(size_t x, size_t y, bool horizontal, std::string word)
 
     size_t index = 0;
 
-    while(*i < i_max)
+    while(*i < i_max && word.length() != index)
     {
-        if(word.length() == index)
-        {
-            break;
-        }
-
         Tile *tile = getTile(x, y);
 
         if(tile->value == ' ')
         {
             tile->value = word[index++];
+            tile->cross_check = true;
         }
 
         i[0]++;
@@ -266,8 +262,67 @@ void Grid::fetch(size_t x, size_t y, bool horizontal, std::string &word)
     }
 }
 
+bool Grid::check(size_t x, size_t y, bool horizontal)
+{
+    std::string word;
+    fetch(x, y, horizontal, word);
+
+    bool valid;
+    if(!validWords.contains(word, &valid) || !valid)
+    {
+        return false;
+    }
+
+    size_t *i;
+    size_t i_max;
+
+    if(horizontal)
+    {
+        i = &x;
+        i_max = w;
+    }
+    else
+    {
+        i = &y;
+        i_max = h;
+    }
+
+    for(size_t index = 0; index < word.length() || *i < i_max; index++)
+    {
+        if(getTile(x, y)->cross_check)
+        {
+            std::string word;
+            fetch(x, y, !horizontal, word);
+            printf("[%d, %d]: %s\n", x, y, word.data());
+            bool valid;
+            if(!validWords.contains(word, &valid) || !valid)
+            {
+                return false;
+            }
+        }
+        i[0]++;
+    }
+
+    return true;
+}
+
 void Grid::calculateBestMove(std::string available)
 {
+    Permutation permutation(available);
+
+    for(const std::string &result : permutation.results)
+    {
+        std::cout << "Permutation: " << result << std::endl;
+    }
+
+    for(size_t x = 0; x < w; x++)
+    {
+        for(size_t y = 0; y < h; y++)
+        {
+            getTile(x, y)->cross_check = false;
+        }
+    }
+
     Grid best = *this;
 
     std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
@@ -275,19 +330,18 @@ void Grid::calculateBestMove(std::string available)
 
     int best_score = this->score();
 
-    for(const bool orientation : { true, false })
+    for(const std::string &result : permutation.results)
     {
-        for(size_t x = 0; x < w; x++)
+        for(const bool horizontal : { true, false })
         {
-            for(size_t y = 0; y < h; y++)
+            for(size_t x = 0; x < w; x++)
             {
-                Permutation permutation(available, x, y, orientation, *this);
-
-                for(const std::string &result : permutation.results)
+                for(size_t y = 0; y < h; y++)
                 {
                     Grid copy = *this;
-                    copy.insert(x, y, orientation, result);
-                    if(copy.validate())
+
+                    copy.insert(x, y, horizontal, result);
+                    if(copy.validateLattice() && copy.check(x, y, horizontal))
                     {
                         int copy_score = copy.score();
 

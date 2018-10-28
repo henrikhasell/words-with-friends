@@ -12,6 +12,7 @@ class Segment;
 class Trie
 {
 public:
+    // TODO: valid should be <bool> and returned if arg == true.
     bool contains(const std::string &string, bool *valid = nullptr) const;
     void insert(const std::string &string);
     virtual void display(size_t indentation = 0) const;

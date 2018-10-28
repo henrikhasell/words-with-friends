@@ -25,6 +25,7 @@ public:
             Start
         };
         Tile();
+        bool cross_check;
         char value;
         Type type;
     };
@@ -40,6 +41,7 @@ public:
     Tile *getTile(size_t x, size_t y);
     void insert(size_t x, size_t y, bool horizontal, std::string word);
     void fetch(size_t x, size_t y, bool horizontal, std::string &word);
+    bool check(size_t x, size_t y, bool horizontal);
     void calculateBestMove(std::string characters);
     bool validateWords(bool horizontal);
     bool validateWords();

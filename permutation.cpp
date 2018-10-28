@@ -10,43 +10,29 @@ const char Permutation::wildcard_values[26] = {
     'y', 'z'
 };
 
-Permutation::Permutation(
-    std::string input,
-    size_t x,
-    size_t y,
-    bool horizontal,
-    const Grid &grid
-) :
-    x(x),
-    y(y),
-    horizontal(horizontal),
-    grid(&grid)
+Permutation::Permutation(const std::string &input)
 {
-    for(size_t i = 0; i < input.length(); i++)
-    {
-        iteration(input, "");
-    }
+    iteration(input, "");
 }
 
 void Permutation::iteration(std::string str, std::string res)
 {
-    Grid copy = *grid;
-    copy.insert(x, y, horizontal, res);
-
     results.insert(res);
 
     for(size_t i = 0; i < str.length(); i++)
     {
+        const std::string &str2 = std::string(str).erase(i, 1);
+
         if(str[i] == '*')
         {
             for(char value : wildcard_values)
             {
-                iteration(str.erase(i, 1), res + value);
+                iteration(str2, res + value);
             }
         }
         else
         {
-            iteration(str.erase(i, 1), res + str[i]);
+            iteration(str2, res + str[i]);
         }
     }
 }
