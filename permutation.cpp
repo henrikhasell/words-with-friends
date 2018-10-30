@@ -15,7 +15,7 @@ Permutation::Permutation(const std::string &input)
     iteration(input, "");
 }
 
-void Permutation::iteration(std::string str, std::string res)
+void Permutation::iteration(const std::string str, const std::string res)
 {
     results.insert(res);
 

@@ -293,9 +293,8 @@ bool Grid::check(size_t x, size_t y, bool horizontal)
         {
             std::string word;
             fetch(x, y, !horizontal, word);
-            printf("[%d, %d]: %s\n", x, y, word.data());
             bool valid;
-            if(!validWords.contains(word, &valid) || !valid)
+            if(word.length() > 1 && (!validWords.contains(word, &valid) || !valid))
             {
                 return false;
             }
@@ -309,11 +308,6 @@ bool Grid::check(size_t x, size_t y, bool horizontal)
 void Grid::calculateBestMove(std::string available)
 {
     Permutation permutation(available);
-
-    for(const std::string &result : permutation.results)
-    {
-        std::cout << "Permutation: " << result << std::endl;
-    }
 
     for(size_t x = 0; x < w; x++)
     {
