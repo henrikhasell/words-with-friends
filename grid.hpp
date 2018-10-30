@@ -13,6 +13,18 @@ extern Trie validWords;
 class Grid
 {
 public:
+    struct Anchor
+    {
+        Anchor(size_t x, size_t y, bool horizontal) :
+            x(x),
+            y(y),
+            horizontal(horizontal)
+        {}
+
+        size_t x;
+        size_t y;
+        bool horizontal;
+    };
     struct Tile
     {
         enum Type
@@ -42,6 +54,7 @@ public:
     void insert(size_t x, size_t y, bool horizontal, std::string word);
     void fetch(size_t x, size_t y, bool horizontal, std::string &word);
     bool check(size_t x, size_t y, bool horizontal);
+    void calculateAnchors(std::vector<Anchor> &anchors);
     void calculateBestMove(std::string characters);
     bool validateWords(bool horizontal);
     bool validateWords();

@@ -305,8 +305,38 @@ bool Grid::check(size_t x, size_t y, bool horizontal)
     return true;
 }
 
+void Grid::calculateAnchors(std::vector<Anchor> &anchors)
+{
+    for(size_t x = 0; x < w; x++)
+    {
+        for(size_t y = 0; y < h; y++)
+        {
+            if(getTile(x, y)->value != ' ')
+            {
+                if(x == 0 || getTile(x - 1, y)->value == ' ')
+                {
+                    anchors.emplace_back(x, y, true);
+                }
+                if(y == 0 || getTile(x, y - 1)->value == ' ')
+                {
+                    anchors.emplace_back(x, y, false);
+                }
+            }
+        }
+    }
+
+    if(anchors.empty())
+    {
+        anchors.emplace_back(w / 2, h / 2, true);
+        anchors.emplace_back(w / 2, h / 2, false);
+    }
+}
+
 void Grid::calculateBestMove(std::string available)
 {
+    std::vector<Anchor> anchors;
+    calculateAnchors(anchors);
+
     Permutation permutation(available);
 
     for(size_t x = 0; x < w; x++)
@@ -324,26 +354,45 @@ void Grid::calculateBestMove(std::string available)
 
     int best_score = this->score();
 
-    for(const std::string &result : permutation.results)
+    for(const Anchor &anchor : anchors)
     {
-        for(const bool horizontal : { true, false })
+        for(const std::string &result : permutation.results)
         {
-            for(size_t x = 0; x < w; x++)
+            for(size_t i = 0; i < result.length(); i++)
             {
-                for(size_t y = 0; y < h; y++)
+                size_t x;
+                size_t y;
+
+                if(anchor.horizontal)
                 {
-                    Grid copy = *this;
-
-                    copy.insert(x, y, horizontal, result);
-                    if(copy.validateLattice() && copy.check(x, y, horizontal))
+                    if(i > x)
                     {
-                        int copy_score = copy.score();
+                        break;
+                    }
+                    x = anchor.x - i;
+                    y = anchor.y;
+                }
+                else
+                {
+                    if(i > y)
+                    {
+                        break;
+                    }
+                    x = anchor.x;
+                    y = anchor.y - i;
+                }
 
-                        if(copy_score > best_score)
-                        {
-                            best_score = copy_score;
-                            best = copy;
-                        }
+                Grid copy = *this;
+
+                copy.insert(x, y, anchor.horizontal, result);
+                if(copy.validateLattice() && copy.check(x, y, anchor.horizontal))
+                {
+                    int copy_score = copy.score();
+
+                    if(copy_score > best_score)
+                    {
+                        best_score = copy_score;
+                        best = copy;
                     }
                 }
             }
