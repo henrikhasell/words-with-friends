@@ -383,9 +383,9 @@ void Grid::calculateBestMove(std::string available)
                 }
 
                 Grid copy = *this;
-
                 copy.insert(x, y, anchor.horizontal, result);
-                if(copy.validateLattice() && copy.check(x, y, anchor.horizontal))
+
+                if(copy.check(x, y, anchor.horizontal))
                 {
                     int copy_score = copy.score();
 
