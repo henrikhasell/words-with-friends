@@ -354,9 +354,12 @@ void Grid::calculateBestMove(std::string available)
 
     int best_score = this->score();
 
-    for(const Anchor &anchor : anchors)
+    for(const std::string &word : permutation.results)
     {
-        for(const std::string &word : permutation.results)
+        auto h_set = new std::set<size_t>[h];
+        auto v_set = new std::set<size_t>[w];
+
+        for(const Anchor &anchor : anchors)
         {
             for(size_t i = 0; i < word.length(); i++)
             {
@@ -371,6 +374,13 @@ void Grid::calculateBestMove(std::string available)
                     }
                     x = anchor.x - i;
                     y = anchor.y;
+
+                    if(h_set[y].find(x) != h_set[y].end())
+                    {
+                        continue;
+                    }
+
+                    h_set[y].insert(x);
                 }
                 else
                 {
@@ -380,6 +390,13 @@ void Grid::calculateBestMove(std::string available)
                     }
                     x = anchor.x;
                     y = anchor.y - i;
+
+                    if(v_set[x].find(y) != v_set[x].end())
+                    {
+                        continue;
+                    }
+
+                    v_set[x].insert(y);
                 }
 
                 Grid copy = *this;
@@ -397,6 +414,9 @@ void Grid::calculateBestMove(std::string available)
                 }
             }
         }
+
+        delete[] v_set;
+        delete[] h_set;
     }
 
     t2 = std::chrono::steady_clock::now();
