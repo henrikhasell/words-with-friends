@@ -17,10 +17,10 @@ Grid Grid::Large()
 {
     Grid grid(15, 15);
 
-    grid.getTile(3, 0)->type = Tile::TrippleWord;
-    grid.getTile(6, 0)->type = Tile::TrippleLetter;
-    grid.getTile(8, 0)->type = Tile::TrippleLetter;
-    grid.getTile(11, 0)->type = Tile::TrippleWord;
+    grid.getTile(3, 0)->type = Tile::TripleWord;
+    grid.getTile(6, 0)->type = Tile::TripleLetter;
+    grid.getTile(8, 0)->type = Tile::TripleLetter;
+    grid.getTile(11, 0)->type = Tile::TripleWord;
 
     grid.getTile(2, 1)->type = Tile::DoubleLetter;
     grid.getTile(5, 1)->type = Tile::DoubleWord;
@@ -32,11 +32,11 @@ Grid Grid::Large()
     grid.getTile(10, 2)->type = Tile::DoubleLetter;
     grid.getTile(13, 2)->type = Tile::DoubleLetter;
 
-    grid.getTile(0, 3)->type = Tile::TrippleWord;
-    grid.getTile(3, 3)->type = Tile::TrippleLetter;
+    grid.getTile(0, 3)->type = Tile::TripleWord;
+    grid.getTile(3, 3)->type = Tile::TripleLetter;
     grid.getTile(7, 3)->type = Tile::DoubleWord;
-    grid.getTile(11, 3)->type = Tile::TrippleLetter;
-    grid.getTile(14, 3)->type = Tile::TrippleWord;
+    grid.getTile(11, 3)->type = Tile::TripleLetter;
+    grid.getTile(14, 3)->type = Tile::TripleWord;
 
     grid.getTile(2, 4)->type = Tile::DoubleLetter;
     grid.getTile(6, 4)->type = Tile::DoubleLetter;
@@ -44,27 +44,27 @@ Grid Grid::Large()
     grid.getTile(12, 4)->type = Tile::DoubleLetter;
 
     grid.getTile(1, 5)->type = Tile::DoubleWord;
-    grid.getTile(5, 5)->type = Tile::TrippleLetter;
-    grid.getTile(9, 5)->type = Tile::TrippleLetter;
+    grid.getTile(5, 5)->type = Tile::TripleLetter;
+    grid.getTile(9, 5)->type = Tile::TripleLetter;
     grid.getTile(13, 5)->type = Tile::DoubleWord;
 
-    grid.getTile(0, 6)->type = Tile::TrippleLetter;
+    grid.getTile(0, 6)->type = Tile::TripleLetter;
     grid.getTile(4, 6)->type = Tile::DoubleLetter;
     grid.getTile(10, 6)->type = Tile::DoubleLetter;
-    grid.getTile(14, 6)->type = Tile::TrippleLetter;
+    grid.getTile(14, 6)->type = Tile::TripleLetter;
 
     grid.getTile(3, 7)->type = Tile::DoubleWord;
     grid.getTile(7, 7)->type = Tile::Start;
     grid.getTile(11, 7)->type = Tile::DoubleWord;
 
-    grid.getTile(0, 8)->type = Tile::TrippleLetter;
+    grid.getTile(0, 8)->type = Tile::TripleLetter;
     grid.getTile(4, 8)->type = Tile::DoubleLetter;
     grid.getTile(10, 8)->type = Tile::DoubleLetter;
-    grid.getTile(14, 8)->type = Tile::TrippleLetter;
+    grid.getTile(14, 8)->type = Tile::TripleLetter;
 
     grid.getTile(1, 9)->type = Tile::DoubleWord;
-    grid.getTile(5, 9)->type = Tile::TrippleLetter;
-    grid.getTile(9, 9)->type = Tile::TrippleLetter;
+    grid.getTile(5, 9)->type = Tile::TripleLetter;
+    grid.getTile(9, 9)->type = Tile::TripleLetter;
     grid.getTile(13, 9)->type = Tile::DoubleWord;
 
     grid.getTile(2, 10)->type = Tile::DoubleLetter;
@@ -72,11 +72,11 @@ Grid Grid::Large()
     grid.getTile(8, 10)->type = Tile::DoubleLetter;
     grid.getTile(12, 10)->type = Tile::DoubleLetter;
 
-    grid.getTile(0, 11)->type = Tile::TrippleWord;
-    grid.getTile(3, 11)->type = Tile::TrippleLetter;
+    grid.getTile(0, 11)->type = Tile::TripleWord;
+    grid.getTile(3, 11)->type = Tile::TripleLetter;
     grid.getTile(7, 11)->type = Tile::DoubleWord;
-    grid.getTile(11, 11)->type = Tile::TrippleLetter;
-    grid.getTile(14, 11)->type = Tile::TrippleWord;
+    grid.getTile(11, 11)->type = Tile::TripleLetter;
+    grid.getTile(14, 11)->type = Tile::TripleWord;
 
     grid.getTile(1, 12)->type = Tile::DoubleLetter;
     grid.getTile(4, 12)->type = Tile::DoubleLetter;
@@ -88,10 +88,10 @@ Grid Grid::Large()
     grid.getTile(9, 13)->type = Tile::DoubleWord;
     grid.getTile(12, 13)->type = Tile::DoubleLetter;
 
-    grid.getTile(3, 14)->type = Tile::TrippleWord;
-    grid.getTile(6, 14)->type = Tile::TrippleLetter;
-    grid.getTile(8, 14)->type = Tile::TrippleLetter;
-    grid.getTile(11, 14)->type = Tile::TrippleWord;
+    grid.getTile(3, 14)->type = Tile::TripleWord;
+    grid.getTile(6, 14)->type = Tile::TripleLetter;
+    grid.getTile(8, 14)->type = Tile::TripleLetter;
+    grid.getTile(11, 14)->type = Tile::TripleWord;
 
     return grid;
 }
@@ -100,24 +100,24 @@ Grid Grid::Small()
 {
     Grid grid(11, 11);
 
-    grid.getTile(0, 0)->type = Tile::TrippleLetter;
-    grid.getTile(2, 0)->type = Tile::TrippleWord;
-    grid.getTile(8, 0)->type = Tile::TrippleWord;
-    grid.getTile(10, 0)->type = Tile::TrippleLetter;
+    grid.getTile(0, 0)->type = Tile::TripleLetter;
+    grid.getTile(2, 0)->type = Tile::TripleWord;
+    grid.getTile(8, 0)->type = Tile::TripleWord;
+    grid.getTile(10, 0)->type = Tile::TripleLetter;
 
     grid.getTile(1, 1)->type = Tile::DoubleWord;
     grid.getTile(5, 1)->type = Tile::DoubleWord;
     grid.getTile(9, 1)->type = Tile::DoubleWord;
 
-    grid.getTile(0, 2)->type = Tile::TrippleWord;
-    grid.getTile(2, 2)->type = Tile::TrippleLetter;
+    grid.getTile(0, 2)->type = Tile::TripleWord;
+    grid.getTile(2, 2)->type = Tile::TripleLetter;
     grid.getTile(4, 2)->type = Tile::DoubleLetter;
     grid.getTile(6, 2)->type = Tile::DoubleLetter;
-    grid.getTile(8, 2)->type = Tile::TrippleLetter;
-    grid.getTile(10, 2)->type = Tile::TrippleWord;
+    grid.getTile(8, 2)->type = Tile::TripleLetter;
+    grid.getTile(10, 2)->type = Tile::TripleWord;
 
-    grid.getTile(3, 3)->type = Tile::TrippleLetter;
-    grid.getTile(7, 3)->type = Tile::TrippleLetter;
+    grid.getTile(3, 3)->type = Tile::TripleLetter;
+    grid.getTile(7, 3)->type = Tile::TripleLetter;
 
     grid.getTile(2, 4)->type = Tile::DoubleLetter;
     grid.getTile(8, 4)->type = Tile::DoubleLetter;
@@ -129,24 +129,24 @@ Grid Grid::Small()
     grid.getTile(2, 6)->type = Tile::DoubleLetter;
     grid.getTile(8, 6)->type = Tile::DoubleLetter;
 
-    grid.getTile(3, 7)->type = Tile::TrippleLetter;
-    grid.getTile(7, 7)->type = Tile::TrippleLetter;
+    grid.getTile(3, 7)->type = Tile::TripleLetter;
+    grid.getTile(7, 7)->type = Tile::TripleLetter;
 
-    grid.getTile(0, 8)->type = Tile::TrippleWord;
-    grid.getTile(2, 8)->type = Tile::TrippleLetter;
+    grid.getTile(0, 8)->type = Tile::TripleWord;
+    grid.getTile(2, 8)->type = Tile::TripleLetter;
     grid.getTile(4, 8)->type = Tile::DoubleLetter;
     grid.getTile(6, 8)->type = Tile::DoubleLetter;
-    grid.getTile(8, 8)->type = Tile::TrippleLetter;
-    grid.getTile(10, 8)->type = Tile::TrippleWord;
+    grid.getTile(8, 8)->type = Tile::TripleLetter;
+    grid.getTile(10, 8)->type = Tile::TripleWord;
 
     grid.getTile(1, 9)->type = Tile::DoubleWord;
     grid.getTile(5, 9)->type = Tile::DoubleWord;
     grid.getTile(9, 9)->type = Tile::DoubleWord;
 
-    grid.getTile(0, 10)->type = Tile::TrippleLetter;
-    grid.getTile(2, 10)->type = Tile::TrippleWord;
-    grid.getTile(8, 10)->type = Tile::TrippleWord;
-    grid.getTile(10, 10)->type = Tile::TrippleLetter;
+    grid.getTile(0, 10)->type = Tile::TripleLetter;
+    grid.getTile(2, 10)->type = Tile::TripleWord;
+    grid.getTile(8, 10)->type = Tile::TripleWord;
+    grid.getTile(10, 10)->type = Tile::TripleLetter;
 
     return grid;
 }
@@ -356,16 +356,16 @@ void Grid::calculateBestMove(std::string available)
 
     for(const Anchor &anchor : anchors)
     {
-        for(const std::string &result : permutation.results)
+        for(const std::string &word : permutation.results)
         {
-            for(size_t i = 0; i < result.length(); i++)
+            for(size_t i = 0; i < word.length(); i++)
             {
                 size_t x;
                 size_t y;
 
                 if(anchor.horizontal)
                 {
-                    if(i > x)
+                    if(i > anchor.x)
                     {
                         break;
                     }
@@ -374,7 +374,7 @@ void Grid::calculateBestMove(std::string available)
                 }
                 else
                 {
-                    if(i > y)
+                    if(i > anchor.y)
                     {
                         break;
                     }
@@ -383,7 +383,7 @@ void Grid::calculateBestMove(std::string available)
                 }
 
                 Grid copy = *this;
-                copy.insert(x, y, anchor.horizontal, result);
+                copy.insert(x, y, anchor.horizontal, word);
 
                 if(copy.check(x, y, anchor.horizontal))
                 {
@@ -602,7 +602,7 @@ int Grid::score()
                             {
                             case Tile::DoubleWord:
                                 word_multiplier *= 2; break;
-                            case Tile::TrippleWord:
+                            case Tile::TripleWord:
                                 word_multiplier *= 3; break;
                             }
                         }
@@ -615,7 +615,7 @@ int Grid::score()
                             {
                             case Tile::DoubleLetter:
                                 tile_multiplier = 2; break;
-                            case Tile::TrippleLetter:
+                            case Tile::TripleLetter:
                                 tile_multiplier = 3; break;
                             }
 

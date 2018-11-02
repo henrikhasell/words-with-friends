@@ -32,8 +32,8 @@ public:
             Normal,
             DoubleLetter,
             DoubleWord,
-            TrippleLetter,
-            TrippleWord,
+            TripleLetter,
+            TripleWord,
             Start
         };
         Tile();

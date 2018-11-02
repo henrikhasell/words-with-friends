@@ -276,9 +276,9 @@ int main(int argc, char *argv[])
                                     colour = 0xb3554d; break;
                                 case Grid::Tile::DoubleLetter:
                                     colour = 0x1181be; break;
-                                case Grid::Tile::TrippleWord:
+                                case Grid::Tile::TripleWord:
                                     colour = 0xea9932; break;
-                                case Grid::Tile::TrippleLetter:
+                                case Grid::Tile::TripleLetter:
                                     colour = 0x6ea256; break;
                                 case Grid::Tile::Start:
                                     colour = 0x78569a; break;
