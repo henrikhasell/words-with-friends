@@ -352,7 +352,7 @@ void Grid::calculateBestMove(std::string available)
     std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
     std::chrono::steady_clock::time_point t2;
 
-    int best_score = this->score();
+    int best_score = 0;
 
     #ifdef GRID_EARLY_EXIT
     std::set<size_t> *h_set = new std::set<size_t>[h];
@@ -422,10 +422,6 @@ void Grid::calculateBestMove(std::string available)
 
                 if(copy.check(x, y, anchor.horizontal))
                 {
-                    std::string tmp;
-                    copy.fetch(x, y, anchor.horizontal, tmp);
-
-                    std::cout << "Checking word " << tmp << std::endl;
                     int copy_score = copy.score(x, y, anchor.horizontal);
 
                     if(copy_score > best_score)
@@ -449,7 +445,7 @@ void Grid::calculateBestMove(std::string available)
         std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
 
     std::cout << "Time elapsed: " << timeElapsedDuration.count() << " seconds." << std::endl;
-    std::cout << "Best score: " << (best_score - this->score()) << std::endl;
+    std::cout << "Best score: " << best_score << std::endl;
     message = "Done!";
 
     *this = best;
@@ -721,7 +717,6 @@ int Grid::score(size_t x, size_t y, bool horizontal, bool recursive)
 
         if(tile->cross_check)
         {
-
             switch(tile->type)
             {
                 case Tile::DoubleLetter:
