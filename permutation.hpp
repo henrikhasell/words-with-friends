@@ -17,7 +17,7 @@ public:
     Permutation(const std::string &input);
     std::set<std::string> results;
 private:
-    void iteration(const std::string str, const std::string res);
+    void iteration(const std::string &str, const std::string &res);
 };
 
 #endif

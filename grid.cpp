@@ -287,7 +287,7 @@ bool Grid::check(size_t x, size_t y, bool horizontal)
         i_max = h;
     }
 
-    for(size_t index = 0; index < word.length() || *i < i_max; index++)
+    for(size_t index = 0; index < word.length() && *i < i_max; index++)
     {
         if(getTile(x, y)->cross_check)
         {
@@ -422,7 +422,11 @@ void Grid::calculateBestMove(std::string available)
 
                 if(copy.check(x, y, anchor.horizontal))
                 {
-                    int copy_score = copy.score();
+                    std::string tmp;
+                    copy.fetch(x, y, anchor.horizontal, tmp);
+
+                    std::cout << "Checking word " << tmp << std::endl;
+                    int copy_score = copy.score(x, y, anchor.horizontal);
 
                     if(copy_score > best_score)
                     {
@@ -668,4 +672,85 @@ int Grid::score()
         }
     }
     return total;
+}
+
+int Grid::score(size_t x, size_t y, bool horizontal, bool recursive)
+{
+    int word_score = 0;
+
+    size_t *i;
+    size_t i_max;
+
+    if(horizontal)
+    {
+        i = &x;
+        i_max = w;
+    }
+    else
+    {
+        i = &y;
+        i_max = h;
+    }
+
+    while(*i > 0)
+    {
+        i[0]--;
+
+        Tile *tile = getTile(x, y);
+
+        if(tile->value == ' ')
+        {
+            i[0]++;
+            break;
+        }
+    }
+
+    int word_multiplier = 1;
+    int tile_count = 0;
+    bool cross_check = false;
+
+    while(*i < i_max)
+    {
+        int tile_multiplier = 1;
+        Tile *tile = getTile(x, y);
+
+        if(tile->value == ' ')
+        {
+            break;
+        }
+
+        if(tile->cross_check)
+        {
+
+            switch(tile->type)
+            {
+                case Tile::DoubleLetter:
+                    tile_multiplier = 2; break;
+                case Tile::TripleLetter:
+                    tile_multiplier = 3; break;
+                case Tile::DoubleWord:
+                    word_multiplier *= 2; break;
+                case Tile::TripleWord:
+                    word_multiplier *= 3; break;
+            }
+
+            cross_check = true;
+        }
+
+        if(recursive)
+        {
+            word_score += score(x, y, !horizontal, false);
+        }
+
+        word_score += tile_multiplier * charScores[toupper(tile->value)];
+        tile_count++;
+        i[0]++;
+    }
+
+    if(cross_check && tile_count > 1)
+    {
+        return word_score;
+    }
+
+    return 0;
 }

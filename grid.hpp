@@ -61,6 +61,7 @@ public:
     bool validateLattice() const;
     bool validate();
     int score();
+    int score(size_t x, size_t y, bool horizontal, bool recursive = true);
 
     size_t w; // Should be private.
     size_t h; // Should be private.

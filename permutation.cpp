@@ -15,13 +15,13 @@ Permutation::Permutation(const std::string &input)
     iteration(input, "");
 }
 
-void Permutation::iteration(const std::string str, const std::string res)
+void Permutation::iteration(const std::string &str, const std::string &res)
 {
     results.insert(res);
 
     for(size_t i = 0; i < str.length(); i++)
     {
-        const std::string &str2 = std::string(str).erase(i, 1);
+        const std::string str2 = std::string(str).erase(i, 1);
 
         if(str[i] == '*')
         {
