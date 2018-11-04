@@ -2,8 +2,8 @@
 #include "trie.hpp"
 #include <fstream>
 
-#define PASS_1 25
-#define PASS_2 25
+#define PASS_1 30
+#define PASS_2 50
 
 std::string message;
 std::map<char, int> charScores;

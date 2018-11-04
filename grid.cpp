@@ -354,11 +354,23 @@ void Grid::calculateBestMove(std::string available)
 
     int best_score = this->score();
 
+    #ifdef GRID_EARLY_EXIT
+    std::set<size_t> *h_set = new std::set<size_t>[h];
+    std::set<size_t> *v_set = new std::set<size_t>[w];
+    #endif
+
     for(const std::string &word : permutation.results)
     {
         #ifdef GRID_EARLY_EXIT
-        auto h_set = new std::set<size_t>[h];
-        auto v_set = new std::set<size_t>[w];
+        for(size_t i = 0; i < w; i++)
+        {
+            v_set[i].clear();
+        }
+
+        for(size_t i = 0; i < h; i++)
+        {
+            h_set[i].clear();
+        }
         #endif
 
         for(const Anchor &anchor : anchors)
@@ -420,12 +432,12 @@ void Grid::calculateBestMove(std::string available)
                 }
             }
         }
-
-        #ifdef GRID_EARLY_EXIT
-        delete[] v_set;
-        delete[] h_set;
-        #endif
     }
+
+    #ifdef GRID_EARLY_EXIT
+    delete[] v_set;
+    delete[] h_set;
+    #endif
 
     t2 = std::chrono::steady_clock::now();
 
