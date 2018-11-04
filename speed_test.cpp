@@ -3,7 +3,7 @@
 #include <fstream>
 
 #define PASS_1 25
-#define PASS_2 10
+#define PASS_2 25
 
 std::string message;
 std::map<char, int> charScores;

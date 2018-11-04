@@ -23,8 +23,10 @@ try:
 except EOFError:
     pass
 
-for p in dictionary:
-    plt.plot([p] * 5, dictionary[p], 'ro')
+# for p in dictionary:
+#     plt.plot([p] * len(dictionary[p]), dictionary[p], 'ro')
+
+plt.boxplot([dictionary[p] for p in dictionary])
 plt.show()
 
 print(dictionary)
