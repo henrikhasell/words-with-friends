@@ -182,7 +182,7 @@ Grid &Grid::operator=(const Grid &grid)
     return *this;
 }
 
-Grid::Tile *Grid::getTile(size_t x, size_t y)
+Grid::Tile *Grid::getTile(size_t x, size_t y) const
 {
     return tiles + x + w * y;
 }
@@ -220,7 +220,7 @@ void Grid::insert(size_t x, size_t y, bool horizontal, std::string word)
     }
 }
 
-void Grid::fetch(size_t x, size_t y, bool horizontal, std::string &word)
+void Grid::fetch(size_t x, size_t y, bool horizontal, std::string &word) const
 {
     size_t *i;
     size_t i_max;
@@ -262,13 +262,12 @@ void Grid::fetch(size_t x, size_t y, bool horizontal, std::string &word)
     }
 }
 
-bool Grid::check(size_t x, size_t y, bool horizontal)
+bool Grid::check(size_t x, size_t y, bool horizontal) const
 {
     std::string word;
     fetch(x, y, horizontal, word);
 
-    bool valid;
-    if(!validWords.contains(word, &valid) || !valid)
+    if(!validWords.contains(word))
     {
         return false;
     }
@@ -293,8 +292,7 @@ bool Grid::check(size_t x, size_t y, bool horizontal)
         {
             std::string word;
             fetch(x, y, !horizontal, word);
-            bool valid;
-            if(word.length() > 1 && (!validWords.contains(word, &valid) || !valid))
+            if(word.length() > 1 && !validWords.contains(word))
             {
                 return false;
             }
@@ -451,7 +449,7 @@ void Grid::calculateBestMove(std::string available)
     *this = best;
 }
 
-bool Grid::validateWords(bool horizontal)
+bool Grid::validateWords(bool horizontal) const
 {
     size_t i;
     size_t j;
@@ -499,8 +497,7 @@ bool Grid::validateWords(bool horizontal)
                     {
                         i = tolower(i);
                     }
-                    bool valid;
-                    if(!validWords.contains(word, &valid) || !valid)
+                    if(!validWords.contains(word))
                     {
                         message = "Invalid word: " + word;
                         return false;
@@ -514,7 +511,7 @@ bool Grid::validateWords(bool horizontal)
     return true;
 }
 
-bool Grid::validateWords()
+bool Grid::validateWords() const
 {
     return validateWords(true) && validateWords(false);
 }
@@ -574,100 +571,16 @@ bool Grid::validateLattice() const
     return true;
 }
 
-bool Grid::validate()
+bool Grid::validate() const
 {
     bool result = validateLattice() && validateWords();
 
     if(result)
     {
-        message = "Validation successfull.";
+        message = "Validation successful.";
     }
 
     return result;
-}
-
-int Grid::score()
-{
-    int total = 0;
-
-    for(const bool horizontal : {true, false})
-    {
-        size_t i;
-        size_t j;
-
-        size_t i_max;
-        size_t j_max;
-
-        size_t *x;
-        size_t *y;
-
-        std::vector<Tile*> word;
-
-        if(horizontal)
-        {
-            i_max = h;
-            j_max = w;
-
-            x = &j;
-            y = &i;
-        }
-        else
-        {
-            i_max = w;
-            j_max = h;
-
-            x = &i;
-            y = &j;
-        }
-
-        for(i = 0; i < i_max; i++)
-        {
-            for(j = 0; j < j_max; j++)
-            {
-                Tile *tile = getTile(*x, *y);
-
-                if(tile->value != ' ')
-                {
-                    word.push_back(tile);
-                }
-                if(tile->value == ' ' || j == j_max - 1)
-                {
-                    if(word.size() > 1)
-                    {
-                        int word_multiplier = 1;
-
-                        for(Tile *tile : word)
-                        {
-                            switch(tile->type)
-                            {
-                            case Tile::DoubleWord:
-                                word_multiplier *= 2; break;
-                            case Tile::TripleWord:
-                                word_multiplier *= 3; break;
-                            }
-                        }
-
-                        for(Tile *tile : word)
-                        {
-                            int tile_multiplier = 1;
-
-                            switch(tile->type)
-                            {
-                            case Tile::DoubleLetter:
-                                tile_multiplier = 2; break;
-                            case Tile::TripleLetter:
-                                tile_multiplier = 3; break;
-                            }
-
-                            total += charScores[toupper(tile->value)] * tile_multiplier * word_multiplier;
-                        }
-                    }
-                    word.clear();
-                }
-            }
-        }
-    }
-    return total;
 }
 
 int Grid::score(size_t x, size_t y, bool horizontal, bool recursive)

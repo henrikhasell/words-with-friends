@@ -20,10 +20,9 @@ public:
             y(y),
             horizontal(horizontal)
         {}
-
-        size_t x;
-        size_t y;
-        bool horizontal;
+        const size_t x;
+        const size_t y;
+        const bool horizontal;
     };
     struct Tile
     {
@@ -37,9 +36,9 @@ public:
             Start
         };
         Tile();
+        Type type;
         bool cross_check;
         char value;
-        Type type;
     };
 
     static Grid Large();
@@ -50,21 +49,21 @@ public:
     ~Grid();
     Grid &operator=(const Grid &grid);
 
-    Tile *getTile(size_t x, size_t y);
+    Tile *getTile(size_t x, size_t y) const;
     void insert(size_t x, size_t y, bool horizontal, std::string word);
-    void fetch(size_t x, size_t y, bool horizontal, std::string &word);
-    bool check(size_t x, size_t y, bool horizontal);
-    void calculateAnchors(std::vector<Anchor> &anchors);
+    void fetch(size_t x, size_t y, bool horizontal, std::string &word) const;
+    bool check(size_t x, size_t y, bool horizontal) const;
     void calculateBestMove(std::string characters);
-    bool validateWords(bool horizontal);
-    bool validateWords();
-    bool validateLattice() const;
-    bool validate();
-    int score();
+    bool validate() const;
     int score(size_t x, size_t y, bool horizontal, bool recursive = true);
 
     size_t w; // Should be private.
     size_t h; // Should be private.
+protected:
+    bool validateWords(bool horizontal) const;
+    bool validateWords() const;
+    bool validateLattice() const;
+    void calculateAnchors(std::vector<Anchor> &anchors);
 private:
     Tile *tiles;
 };

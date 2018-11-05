@@ -4,16 +4,13 @@
 #include <set>
 #include <string>
 
-#include <iostream>
-
 class Trie;
 class Segment;
 
 class Trie
 {
 public:
-    // TODO: valid should be <bool> and returned if arg == true.
-    bool contains(const std::string &string, bool *valid = nullptr) const;
+    bool contains(const std::string &string, bool valid = true) const;
     void insert(const std::string &string);
     virtual void display(size_t indentation = 0) const;
 protected:
