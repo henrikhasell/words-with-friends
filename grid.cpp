@@ -213,6 +213,7 @@ void Grid::insert(size_t x, size_t y, bool horizontal, std::string word)
         if(tile->value == ' ')
         {
             tile->value = word[index++];
+            tile->wild = tile->value < 'a';
             tile->cross_check = true;
         }
 
@@ -650,7 +651,10 @@ int Grid::score(size_t x, size_t y, bool horizontal, bool recursive)
             word_score += score(x, y, !horizontal, false);
         }
 
-        word_score += tile_multiplier * charScores[toupper(tile->value)];
+        if(!tile->wild)
+        {
+            word_score += tile_multiplier * charScores[toupper(tile->value)];
+        }
         tile_count++;
         i[0]++;
     }

@@ -37,6 +37,7 @@ public:
         };
         Tile();
         Type type;
+        bool wild;
         bool cross_check;
         char value;
     };

@@ -8,7 +8,7 @@ class Permutation
 {
     static const char wildcard_values[26];
 public:
-    Permutation(const std::string &input);
+    explicit Permutation(const std::string &input);
     std::set<std::string> results;
 private:
     void iteration(const std::string &str, const std::string &res);
