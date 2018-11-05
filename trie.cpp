@@ -3,7 +3,7 @@
 
 bool Trie::contains(const std::string &string, bool valid) const
 {
-    std::set<Segment>::iterator iterator = children.find(string[0]);
+    std::set<Segment>::iterator iterator = children.find(tolower(string[0]));
 
     if(iterator != children.end())
     {

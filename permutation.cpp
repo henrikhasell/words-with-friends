@@ -33,7 +33,7 @@ void Permutation::iteration(const std::string &str, const std::string &res)
         }
         else
         {
-            iteration(str2, res + str[i]);
+            iteration(str2, res + (char)tolower(str[i]));
         }
     }
 }

@@ -212,8 +212,9 @@ void Grid::insert(size_t x, size_t y, bool horizontal, std::string word)
 
         if(tile->value == ' ')
         {
-            tile->value = word[index++];
-            tile->wild = tile->value < 'a';
+            const char new_value = word[index++];
+            tile->value = tolower(new_value);
+            tile->wild = new_value < 'a';
             tile->cross_check = true;
         }
 
@@ -321,6 +322,19 @@ void Grid::calculateAnchors(std::vector<Anchor> &anchors)
                     anchors.emplace_back(x, y, false);
                 }
             }
+	    else
+	    {
+               if(x > 0 && getTile(x - 1, y)->value != ' ' ||
+                  x < w - 1  && getTile(x + 1, y)->value != ' ')
+	       {
+                    anchors.emplace_back(x, y, false);
+	       }
+               if(y > 0 && getTile(x, y - 1)->value != ' ' ||
+                  y > h - 1 && getTile(x, y + 1)->value != ' ')
+	       {
+                    anchors.emplace_back(x, y, true);
+	       }
+	    }
         }
     }
 
@@ -622,7 +636,7 @@ int Grid::score(size_t x, size_t y, bool horizontal, bool recursive)
     while(*i < i_max)
     {
         int tile_multiplier = 1;
-        Tile *tile = getTile(x, y);
+        const Tile *tile = getTile(x, y);
 
         if(tile->value == ' ')
         {
@@ -643,24 +657,32 @@ int Grid::score(size_t x, size_t y, bool horizontal, bool recursive)
                     word_multiplier *= 3; break;
             }
 
-            cross_check = true;
-        }
+            if(recursive)
+            {
+                word_score += score(x, y, !horizontal, false);
+            }
 
-        if(recursive)
-        {
-            word_score += score(x, y, !horizontal, false);
+            cross_check = true;
         }
 
         if(!tile->wild)
         {
             word_score += tile_multiplier * charScores[toupper(tile->value)];
         }
+
         tile_count++;
         i[0]++;
     }
 
     if(cross_check && tile_count > 1)
     {
+        word_score *= word_multiplier;
+
+        if(tile_count >= 7)
+        {
+            word_score += 35;
+        }
+
         return word_score;
     }
 
