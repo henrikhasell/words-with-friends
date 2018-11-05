@@ -110,10 +110,10 @@ Grid Grid::Small()
     grid.getTile(9, 1)->type = Tile::DoubleWord;
 
     grid.getTile(0, 2)->type = Tile::TripleWord;
-    grid.getTile(2, 2)->type = Tile::TripleLetter;
+    grid.getTile(2, 2)->type = Tile::DoubleLetter;
     grid.getTile(4, 2)->type = Tile::DoubleLetter;
     grid.getTile(6, 2)->type = Tile::DoubleLetter;
-    grid.getTile(8, 2)->type = Tile::TripleLetter;
+    grid.getTile(8, 2)->type = Tile::DoubleLetter;
     grid.getTile(10, 2)->type = Tile::TripleWord;
 
     grid.getTile(3, 3)->type = Tile::TripleLetter;
@@ -133,10 +133,10 @@ Grid Grid::Small()
     grid.getTile(7, 7)->type = Tile::TripleLetter;
 
     grid.getTile(0, 8)->type = Tile::TripleWord;
-    grid.getTile(2, 8)->type = Tile::TripleLetter;
+    grid.getTile(2, 8)->type = Tile::DoubleLetter;
     grid.getTile(4, 8)->type = Tile::DoubleLetter;
     grid.getTile(6, 8)->type = Tile::DoubleLetter;
-    grid.getTile(8, 8)->type = Tile::TripleLetter;
+    grid.getTile(8, 8)->type = Tile::DoubleLetter;
     grid.getTile(10, 8)->type = Tile::TripleWord;
 
     grid.getTile(1, 9)->type = Tile::DoubleWord;
