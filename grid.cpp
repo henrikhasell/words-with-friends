@@ -600,7 +600,7 @@ bool Grid::validate() const
 
 int Grid::score(size_t x, size_t y, bool horizontal, bool recursive)
 {
-    int word_score = 0;
+    int word_score = 0, adjacent_score = 0;
 
     size_t *i;
     size_t i_max;
@@ -630,18 +630,19 @@ int Grid::score(size_t x, size_t y, bool horizontal, bool recursive)
     }
 
     int word_multiplier = 1;
-    int tile_count = 0;
+    int tile_count = 0, new_tile_count = 0;
     bool cross_check = false;
 
     while(*i < i_max)
     {
-        int tile_multiplier = 1;
         const Tile *tile = getTile(x, y);
 
         if(tile->value == ' ')
         {
             break;
         }
+
+        int tile_multiplier = 1;
 
         if(tile->cross_check)
         {
@@ -659,10 +660,11 @@ int Grid::score(size_t x, size_t y, bool horizontal, bool recursive)
 
             if(recursive)
             {
-                word_score += score(x, y, !horizontal, false);
+                adjacent_score += score(x, y, !horizontal, false);
             }
 
             cross_check = true;
+	    new_tile_count++;
         }
 
         if(!tile->wild)
@@ -677,8 +679,9 @@ int Grid::score(size_t x, size_t y, bool horizontal, bool recursive)
     if(cross_check && tile_count > 1)
     {
         word_score *= word_multiplier;
+	word_score += adjacent_score;
 
-        if(tile_count >= 7)
+        if(new_tile_count >= 7)
         {
             word_score += 35;
         }
