@@ -330,7 +330,7 @@ void Grid::calculateAnchors(std::vector<Anchor> &anchors)
                     anchors.emplace_back(x, y, false);
 	       }
                if(y > 0 && getTile(x, y - 1)->value != ' ' ||
-                  y > h - 1 && getTile(x, y + 1)->value != ' ')
+                  y < h - 1 && getTile(x, y + 1)->value != ' ')
 	       {
                     anchors.emplace_back(x, y, true);
 	       }
@@ -399,6 +399,7 @@ void Grid::calculateBestMove(std::string available)
                     {
                         break;
                     }
+
                     x = anchor.x - i;
                     y = anchor.y;
 

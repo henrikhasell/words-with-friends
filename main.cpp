@@ -157,7 +157,10 @@ int main(int argc, char *argv[])
                     {
                         if(input_mode == Board)
                         {
-                            grid.getTile(cursor_x, cursor_y)->value = e.text.text[0];
+                            Grid::Tile *tile = grid.getTile(cursor_x, cursor_y);
+                            tile->value = e.text.text[0];
+                            tile->cross_check = false;
+			    tile->wild = false;
                             grid.validate();
                         }
                         else if(input.length() < 7)
