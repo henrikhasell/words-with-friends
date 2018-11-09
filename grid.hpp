@@ -51,6 +51,13 @@ public:
     Grid &operator=(const Grid &grid);
 
     Tile *getTile(size_t x, size_t y) const;
+    void insert(
+        size_t x,
+        size_t y,
+        bool horizontal,
+        std::string permutation,
+        Grid &best_grid
+        int &best_score);
     void insert(size_t x, size_t y, bool horizontal, std::string word);
     void fetch(size_t x, size_t y, bool horizontal, std::string &word) const;
     bool check(size_t x, size_t y, bool horizontal) const;

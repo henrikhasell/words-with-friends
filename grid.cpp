@@ -187,6 +187,48 @@ Grid::Tile *Grid::getTile(size_t x, size_t y) const
     return tiles + x + w * y;
 }
 
+void Grid::insert(
+    size_t x,
+    size_t y,
+    bool horizontal,
+    std::string permutation,
+    Grid &best_grid
+    int &best_score)
+{
+    size_t *i;
+    size_t i_max;
+
+    if(horizontal)
+    {
+        i = &x;
+        i_max = w;
+    }
+    else
+    {
+        i = &y;
+        i_max = h;
+    }
+
+    size_t index = 0;
+
+    while(*i < i_max && word.length() != index)
+    {
+        Tile *tile = getTile(x, y);
+
+        if(tile->value == ' ')
+        {
+            const char new_value = word[index++];
+            tile->value = tolower(new_value);
+            tile->wild = new_value < 'a';
+            tile->cross_check = true;
+
+            std::string parallel;
+            fetch(x, y, 
+        }
+
+        i[0]++;
+    }
+}
 
 void Grid::insert(size_t x, size_t y, bool horizontal, std::string word)
 {
