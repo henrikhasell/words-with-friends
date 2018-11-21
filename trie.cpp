@@ -1,7 +1,7 @@
 #include "trie.hpp"
 #include <iostream>
 
-bool Trie::contains(const std::string &string, bool valid) const
+bool Trie::contains(const std::string &string, bool *valid) const
 {
     std::set<Segment>::iterator iterator = children.find(tolower(string[0]));
 
@@ -11,7 +11,11 @@ bool Trie::contains(const std::string &string, bool valid) const
 
         if(string.length() == 1)
         {
-            return valid ? segment.valid : true;
+			if(valid)
+			{
+				*valid = segment.valid;
+			}
+            return (!valid) ? segment.valid : true;
         }
 
         return segment.contains(string.substr(1), valid);

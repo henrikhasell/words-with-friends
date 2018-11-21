@@ -192,7 +192,7 @@ void Grid::insert(
     size_t y,
     bool horizontal,
     std::string permutation,
-    Grid &best_grid
+    Grid &best_grid,
     int &best_score)
 {
     size_t *i;
@@ -209,21 +209,50 @@ void Grid::insert(
         i_max = h;
     }
 
-    size_t index = 0;
 
-    while(*i < i_max && word.length() != index)
+	Grid copy = *this;
+
+    for(size_t index = 0; index < permutation.length() && *i < i_max; index++)
     {
-        Tile *tile = getTile(x, y);
+        Tile *tile = copy.getTile(x, y);
 
         if(tile->value == ' ')
         {
-            const char new_value = word[index++];
+            const char new_value = permutation[index];
+
             tile->value = tolower(new_value);
             tile->wild = new_value < 'a';
             tile->cross_check = true;
 
-            std::string parallel;
-            fetch(x, y, 
+
+			std::string word;
+			copy.fetch(x, y, horizontal, word);
+
+			bool valid;
+
+			if(word.length() > 1 && !validWords.contains(word, &valid))
+			{
+				break;
+			}
+
+			std::string adjacent;
+			copy.fetch(x, y, !horizontal, adjacent);
+
+			if(adjacent.length() > 1 && !validWords.contains(adjacent))
+			{
+				break;
+			}
+
+			if(valid)
+			{
+                int copy_score = copy.score(x, y, horizontal);
+
+                if(copy_score > best_score)
+                {
+                    best_score = copy_score;
+                    best_grid = copy;
+                }
+			}
         }
 
         i[0]++;
@@ -246,15 +275,14 @@ void Grid::insert(size_t x, size_t y, bool horizontal, std::string word)
         i_max = h;
     }
 
-    size_t index = 0;
-
-    while(*i < i_max && word.length() != index)
+    for(size_t index = 0; index < word.length() && *i < i_max; index++)
     {
         Tile *tile = getTile(x, y);
 
         if(tile->value == ' ')
         {
-            const char new_value = word[index++];
+            const char new_value = word[index];
+
             tile->value = tolower(new_value);
             tile->wild = new_value < 'a';
             tile->cross_check = true;
@@ -263,7 +291,6 @@ void Grid::insert(size_t x, size_t y, bool horizontal, std::string word)
         i[0]++;
     }
 }
-
 void Grid::fetch(size_t x, size_t y, bool horizontal, std::string &word) const
 {
     size_t *i;
@@ -284,9 +311,7 @@ void Grid::fetch(size_t x, size_t y, bool horizontal, std::string &word) const
     {
         i[0]--;
 
-        Tile *tile = getTile(x, y);
-
-        if(tile->value == ' ')
+        if(getTile(x, y)->value == ' ')
         {
             i[0]++;
             break;
@@ -295,7 +320,7 @@ void Grid::fetch(size_t x, size_t y, bool horizontal, std::string &word) const
 
     while(*i < i_max)
     {
-        Tile *tile = getTile(x, y);
+        const Tile *tile = getTile(x, y);
 
         if(tile->value == ' ')
         {
@@ -430,49 +455,17 @@ void Grid::calculateBestMove(std::string available)
 
         for(const Anchor &anchor : anchors)
         {
-            for(size_t i = 0; i < word.length(); i++)
-            {
-                size_t x;
-                size_t y;
+            size_t x = anchor.x;
+            size_t y = anchor.y;
 
-                if(anchor.horizontal)
-                {
-                    if(i > anchor.x)
-                    {
-                        break;
-                    }
-
-                    x = anchor.x - i;
-                    y = anchor.y;
-
-                    #ifdef GRID_EARLY_EXIT
-                    if(h_set[y].find(x) != h_set[y].end())
-                    {
-                        continue;
-                    }
-
-                    h_set[y].insert(x);
-                    #endif
-                }
-                else
-                {
-                    if(i > anchor.y)
-                    {
-                        break;
-                    }
-                    x = anchor.x;
-                    y = anchor.y - i;
-
-                    #ifdef GRID_EARLY_EXIT
-                    if(v_set[x].find(y) != v_set[x].end())
-                    {
-                        continue;
-                    }
-
-                    v_set[x].insert(y);
-                    #endif
-                }
-
+			insert(
+				x,
+				y,
+				anchor.horizontal,
+				word,
+				best,
+				best_score);
+/*
                 Grid copy = *this;
                 copy.insert(x, y, anchor.horizontal, word);
 
@@ -486,7 +479,7 @@ void Grid::calculateBestMove(std::string available)
                         best = copy;
                     }
                 }
-            }
+*/
         }
     }
 

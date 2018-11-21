@@ -11,7 +11,7 @@ public:
     explicit Permutation(const std::string &input);
     std::set<std::string> results;
 private:
-    void iteration(const std::string &str, const std::string &res);
+    void iteration(std::string str, size_t j, size_t limit);
 };
 
 #endif

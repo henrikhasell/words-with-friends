@@ -12,28 +12,26 @@ const char Permutation::wildcard_values[26] = {
 
 Permutation::Permutation(const std::string &input)
 {
-    iteration(input, "");
+    iteration(input, 0, input.length() - 1);
     results.begin();
 }
 
-void Permutation::iteration(const std::string &str, const std::string &res)
+void Permutation::iteration(std::string str, size_t j, size_t limit)
 {
-    results.insert(res);
+	if(j == limit)
+	{
+		results.insert(str);
+	}
+	else
+	{
+		for(size_t i = j; i <= limit; i++)
+		{
+			const char c = str[j];
 
-    for(size_t i = 0; i < str.length(); i++)
-    {
-        const std::string str2 = std::string(str).erase(i, 1);
+			str[j] = str[i];
+			str[i] = c;
 
-        if(str[i] == '*')
-        {
-            for(char value : wildcard_values)
-            {
-                iteration(str2, res + value);
-            }
-        }
-        else
-        {
-            iteration(str2, res + (char)tolower(str[i]));
-        }
-    }
+			iteration(str, j + 1, limit);
+		}
+	}
 }
