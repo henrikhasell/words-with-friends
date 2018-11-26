@@ -209,7 +209,7 @@ void Grid::insert(
         i_max = h;
     }
 
-
+	bool joined = false;
 	Grid copy = *this;
 
     for(size_t index = 0; index < permutation.length() && *i < i_max; index++)
@@ -223,6 +223,11 @@ void Grid::insert(
             tile->value = tolower(new_value);
             tile->wild = new_value < 'a';
             tile->cross_check = true;
+
+	    if(tile->type == Tile::Type::Start)
+	    {
+		joined = true;
+	    }
 
 
 			std::string word;
@@ -243,7 +248,7 @@ void Grid::insert(
 				break;
 			}
 
-			if(valid)
+			if(joined && valid)
 			{
                 int copy_score = copy.score(x, y, horizontal);
 
@@ -254,6 +259,10 @@ void Grid::insert(
                 }
 			}
         }
+	else
+	{
+		joined = true;
+	}
 
         i[0]++;
     }
@@ -434,59 +443,46 @@ void Grid::calculateBestMove(std::string available)
 
     int best_score = 0;
 
-    #ifdef GRID_EARLY_EXIT
-    std::set<size_t> *h_set = new std::set<size_t>[h];
-    std::set<size_t> *v_set = new std::set<size_t>[w];
-    #endif
-
     for(const std::string &word : permutation.results)
     {
-        #ifdef GRID_EARLY_EXIT
-        for(size_t i = 0; i < w; i++)
-        {
-            v_set[i].clear();
-        }
-
-        for(size_t i = 0; i < h; i++)
-        {
-            h_set[i].clear();
-        }
-        #endif
-
         for(const Anchor &anchor : anchors)
         {
-            size_t x = anchor.x;
-            size_t y = anchor.y;
+            for(size_t i = 0; i < word.length(); i++)
+            {
+                size_t x;
+                size_t y;
 
-			insert(
-				x,
-				y,
-				anchor.horizontal,
-				word,
-				best,
-				best_score);
-/*
-                Grid copy = *this;
-                copy.insert(x, y, anchor.horizontal, word);
-
-                if(copy.check(x, y, anchor.horizontal))
+                if(anchor.horizontal)
                 {
-                    int copy_score = copy.score(x, y, anchor.horizontal);
-
-                    if(copy_score > best_score)
+                    if(i > anchor.x)
                     {
-                        best_score = copy_score;
-                        best = copy;
+                        break;
                     }
+
+                    x = anchor.x - i;
+                    y = anchor.y;
                 }
-*/
+                else
+                {
+                    if(i > anchor.y)
+                    {
+                        break;
+                    }
+
+                    x = anchor.x;
+                    y = anchor.y - i;
+                }
+
+		insert(
+			x,
+			y,
+			anchor.horizontal,
+			word,
+			best,
+			best_score);
+	    }
         }
     }
-
-    #ifdef GRID_EARLY_EXIT
-    delete[] v_set;
-    delete[] h_set;
-    #endif
 
     t2 = std::chrono::steady_clock::now();
 
