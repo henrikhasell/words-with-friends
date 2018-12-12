@@ -30,17 +30,26 @@ public:
             const std::string word,
             size_t x,
             size_t y,
-            bool horizontal
+            bool horizontal,
+            int score
         ) :
             word(word),
             x(x),
             y(y),
-            horizontal(horizontal)
+            horizontal(horizontal),
+            score(score)
         {}
+
+        bool operator<(const Placement &right) const
+        {
+            return score < right.score;
+        }
+
         const std::string word;
         const size_t x;
         const size_t y;
 	const bool horizontal;
+	const int score;
     };
     struct Tile
     {
