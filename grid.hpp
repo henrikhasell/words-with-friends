@@ -24,6 +24,24 @@ public:
         const size_t y;
         const bool horizontal;
     };
+    struct Placement
+    {
+        Placement(
+            const std::string word,
+            size_t x,
+            size_t y,
+            bool horizontal
+        ) :
+            word(word),
+            x(x),
+            y(y),
+            horizontal(horizontal)
+        {}
+        const std::string word;
+        const size_t x;
+        const size_t y;
+	const bool horizontal;
+    };
     struct Tile
     {
         enum Type
@@ -54,6 +72,7 @@ public:
     void insert(size_t x, size_t y, bool horizontal, std::string word);
     void fetch(size_t x, size_t y, bool horizontal, std::string &word) const;
     bool check(size_t x, size_t y, bool horizontal) const;
+    std::set<Placement> calculatePlacements(std::string characters) const;
     void calculateBestMove(std::string characters);
     bool validate() const;
     int score(size_t x, size_t y, bool horizontal, bool recursive = true);

@@ -345,6 +345,17 @@ void Grid::calculateAnchors(std::vector<Anchor> &anchors)
     }
 }
 
+std::set<Grid::Placement> Grid::calculatePlacements(std::string characters) const
+{
+/*
+    std::set<Placement> placements;
+
+    // TODO: Calculate placements.
+
+    return placements;
+*/
+}
+
 void Grid::calculateBestMove(std::string available)
 {
     std::vector<Anchor> anchors;
