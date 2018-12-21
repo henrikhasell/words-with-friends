@@ -13,7 +13,7 @@
 #include "grid.hpp"
 #include "trie.hpp"
 
-#define TILE_SIZE 50
+#define TILE_SIZE 20
 #define GLYPH_W 8
 #define GLYPH_H 8
 #define GRID_SIZE_X 15

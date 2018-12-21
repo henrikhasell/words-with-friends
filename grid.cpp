@@ -305,7 +305,7 @@ bool Grid::check(size_t x, size_t y, bool horizontal) const
     return true;
 }
 
-void Grid::calculateAnchors(std::vector<Anchor> &anchors)
+void Grid::calculateAnchors(std::vector<Anchor> &anchors) const
 {
     for(size_t x = 0; x < w; x++)
     {
@@ -345,21 +345,94 @@ void Grid::calculateAnchors(std::vector<Anchor> &anchors)
     }
 }
 
-std::set<Grid::Placement> Grid::calculatePlacements(std::string characters) const
+std::set<Grid::Placement> Grid::calculatePlacements(std::string available) const
 {
-/*
     std::set<Placement> placements;
 
-    // TODO: Calculate placements.
+    std::vector<Anchor> anchors;
+    calculateAnchors(anchors);
+
+    Permutation permutation(available);
+
+    for(const std::string &word : permutation.results)
+    {
+        std::cout << word << std::endl;
+
+        for(const Anchor &anchor : anchors)
+        {
+            std::cout << "   anchor:" << std::endl;
+            for(size_t i = 0; i < word.length(); i++)
+            {
+                size_t x;
+                size_t y;
+
+                if(anchor.horizontal)
+                {
+                    if(i > anchor.x)
+                    {
+                        break;
+                    }
+
+                    x = anchor.x - i;
+                    y = anchor.y;
+                }
+                else
+                {
+                    if(i > anchor.y)
+                    {
+                        break;
+                    }
+
+                    x = anchor.x;
+                    y = anchor.y - i;
+                }
+
+                Grid copy = *this;
+
+                for(size_t x = 0; x < w; x++)
+                {
+                    for(size_t y = 0; y < h; y++)
+                    {
+                        copy.getTile(x, y)->cross_check = false;
+                    }
+                }
+
+                copy.insert(x, y, anchor.horizontal, word);
+
+                if(copy.check(x, y, anchor.horizontal))
+                {
+                    std::cout << "        pre-fetch" << std::endl;
+                    std::string word;
+		    copy.fetch(x, y, anchor.horizontal, word);
+                    std::cout << "        post-fetch" << std::endl;
+
+                    std::cout << "        pre-score" << std::endl;
+		    int score = copy.score(x, y, anchor.horizontal);
+                    std::cout << "        post-score" << std::endl;
+
+                    std::cout << "        pre-emplace" << std::endl;
+                    placements.emplace(x, y, anchor.horizontal, word, score);
+                    std::cout << "        post-emplace" << std::endl;
+                }
+            }
+        }
+    }
 
     return placements;
-*/
+
 }
 
 void Grid::calculateBestMove(std::string available)
 {
     std::vector<Anchor> anchors;
     calculateAnchors(anchors);
+
+    std::set<Placement> placements = calculatePlacements(available);
+
+    for(const Placement &placement : placements)
+    {
+        printf("[%zu,%zu] %s\n", placement.x, placement.y, placement.word.data());
+    }
 
     Permutation permutation(available);
 

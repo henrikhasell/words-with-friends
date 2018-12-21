@@ -27,28 +27,28 @@ public:
     struct Placement
     {
         Placement(
-            const std::string word,
             size_t x,
             size_t y,
             bool horizontal,
+            const std::string &word,
             int score
         ) :
-            word(word),
             x(x),
             y(y),
             horizontal(horizontal),
+            word(word),
             score(score)
         {}
 
         bool operator<(const Placement &right) const
         {
-            return score < right.score;
+            return score < right.score || (score == right.score && word < right.word);
         }
 
-        const std::string word;
         const size_t x;
         const size_t y;
 	const bool horizontal;
+        const std::string word;
 	const int score;
     };
     struct Tile
@@ -92,7 +92,7 @@ protected:
     bool validateWords(bool horizontal) const;
     bool validateWords() const;
     bool validateLattice() const;
-    void calculateAnchors(std::vector<Anchor> &anchors);
+    void calculateAnchors(std::vector<Anchor> &anchors) const;
 private:
     Tile *tiles;
 };
