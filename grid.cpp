@@ -354,14 +354,11 @@ std::set<Grid::Placement> Grid::calculatePlacements(std::string available) const
 
     Permutation permutation(available);
 
-    for(const std::string &word : permutation.results)
+    for(const std::string &letters : permutation.results)
     {
-        std::cout << word << std::endl;
-
         for(const Anchor &anchor : anchors)
         {
-            std::cout << "   anchor:" << std::endl;
-            for(size_t i = 0; i < word.length(); i++)
+            for(size_t i = 0; i < letters.length(); i++)
             {
                 size_t x;
                 size_t y;
@@ -397,22 +394,19 @@ std::set<Grid::Placement> Grid::calculatePlacements(std::string available) const
                     }
                 }
 
-                copy.insert(x, y, anchor.horizontal, word);
+                copy.insert(x, y, anchor.horizontal, letters);
 
                 if(copy.check(x, y, anchor.horizontal))
                 {
-                    std::cout << "        pre-fetch" << std::endl;
                     std::string word;
 		    copy.fetch(x, y, anchor.horizontal, word);
-                    std::cout << "        post-fetch" << std::endl;
 
-                    std::cout << "        pre-score" << std::endl;
-		    int score = copy.score(x, y, anchor.horizontal);
-                    std::cout << "        post-score" << std::endl;
+		    const int score = copy.score(x, y, anchor.horizontal);
 
-                    std::cout << "        pre-emplace" << std::endl;
-                    placements.emplace(x, y, anchor.horizontal, word, score);
-                    std::cout << "        post-emplace" << std::endl;
+		    if(score)
+		    {
+                        placements.emplace(x, y, anchor.horizontal, word, letters, score);
+	            }
                 }
             }
         }
@@ -427,126 +421,29 @@ void Grid::calculateBestMove(std::string available)
     std::vector<Anchor> anchors;
     calculateAnchors(anchors);
 
-    std::set<Placement> placements = calculatePlacements(available);
-
-    for(const Placement &placement : placements)
-    {
-        printf("[%zu,%zu] %s\n", placement.x, placement.y, placement.word.data());
-    }
-
-    Permutation permutation(available);
-
-    for(size_t x = 0; x < w; x++)
-    {
-        for(size_t y = 0; y < h; y++)
-        {
-            getTile(x, y)->cross_check = false;
-        }
-    }
-
-    Grid best = *this;
-
     std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
     std::chrono::steady_clock::time_point t2;
 
-    int best_score = 0;
-
-    #ifdef GRID_EARLY_EXIT
-    std::set<size_t> *h_set = new std::set<size_t>[h];
-    std::set<size_t> *v_set = new std::set<size_t>[w];
-    #endif
-
-    for(const std::string &word : permutation.results)
-    {
-        #ifdef GRID_EARLY_EXIT
-        for(size_t i = 0; i < w; i++)
-        {
-            v_set[i].clear();
-        }
-
-        for(size_t i = 0; i < h; i++)
-        {
-            h_set[i].clear();
-        }
-        #endif
-
-        for(const Anchor &anchor : anchors)
-        {
-            for(size_t i = 0; i < word.length(); i++)
-            {
-                size_t x;
-                size_t y;
-
-                if(anchor.horizontal)
-                {
-                    if(i > anchor.x)
-                    {
-                        break;
-                    }
-
-                    x = anchor.x - i;
-                    y = anchor.y;
-
-                    #ifdef GRID_EARLY_EXIT
-                    if(h_set[y].find(x) != h_set[y].end())
-                    {
-                        continue;
-                    }
-
-                    h_set[y].insert(x);
-                    #endif
-                }
-                else
-                {
-                    if(i > anchor.y)
-                    {
-                        break;
-                    }
-                    x = anchor.x;
-                    y = anchor.y - i;
-
-                    #ifdef GRID_EARLY_EXIT
-                    if(v_set[x].find(y) != v_set[x].end())
-                    {
-                        continue;
-                    }
-
-                    v_set[x].insert(y);
-                    #endif
-                }
-
-                Grid copy = *this;
-                copy.insert(x, y, anchor.horizontal, word);
-
-                if(copy.check(x, y, anchor.horizontal))
-                {
-                    int copy_score = copy.score(x, y, anchor.horizontal);
-
-                    if(copy_score > best_score)
-                    {
-                        best_score = copy_score;
-                        best = copy;
-                    }
-                }
-            }
-        }
-    }
-
-    #ifdef GRID_EARLY_EXIT
-    delete[] v_set;
-    delete[] h_set;
-    #endif
-
     t2 = std::chrono::steady_clock::now();
+
+    std::set<Placement> placements = calculatePlacements(available);
 
     std::chrono::duration<double> timeElapsedDuration =
         std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
 
     std::cout << "Time elapsed: " << timeElapsedDuration.count() << " seconds." << std::endl;
-    std::cout << "Best score: " << best_score << std::endl;
     message = "Done!";
 
-    *this = best;
+    for(const Placement &placement : placements)
+    {
+        printf("[%zu,%zu,%c] %s (%d)\n", placement.x, placement.y, placement.horizontal ? 'H' : 'V',  placement.word.data(), placement.score);
+    }
+
+    if(!placements.empty())
+    {
+	const Placement &highest_score = *placements.rbegin();
+        this->insert(highest_score.x, highest_score.y, highest_score.horizontal, highest_score.letters);
+    }
 }
 
 bool Grid::validateWords(bool horizontal) const

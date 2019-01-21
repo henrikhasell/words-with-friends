@@ -31,12 +31,14 @@ public:
             size_t y,
             bool horizontal,
             const std::string &word,
+            const std::string &letters,
             int score
         ) :
             x(x),
             y(y),
             horizontal(horizontal),
             word(word),
+            letters(letters),
             score(score)
         {}
 
@@ -49,6 +51,7 @@ public:
         const size_t y;
 	const bool horizontal;
         const std::string word;
+        const std::string letters;
 	const int score;
     };
     struct Tile
