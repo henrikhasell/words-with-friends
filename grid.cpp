@@ -399,14 +399,23 @@ std::set<Grid::Placement> Grid::calculatePlacements(std::string available) const
                 if(copy.check(x, y, anchor.horizontal))
                 {
                     std::string word;
-		    copy.fetch(x, y, anchor.horizontal, word);
+                    copy.fetch(x, y, anchor.horizontal, word);
 
-		    const int score = copy.score(x, y, anchor.horizontal);
-
-		    if(score)
-		    {
+                    const int score = copy.score(x, y, anchor.horizontal);
+/*
+                    printf(
+                        "Inserting [%zu,%zu,%c] %s (%d)\n",
+                        x,
+                        y,
+                        anchor.horizontal ? 'H' : 'V',
+                        word.data(),
+                        score
+                    );
+*/
+                    if(score)
+                    {
                         placements.emplace(x, y, anchor.horizontal, word, letters, score);
-	            }
+                    }
                 }
             }
         }
@@ -420,7 +429,17 @@ void Grid::calculateBestMove(std::string available)
 {
     std::vector<Anchor> anchors;
     calculateAnchors(anchors);
-
+/*
+    for(const Anchor &anchor : anchors)
+    {
+        printf(
+            "[%zu,%zu,%c]\n",
+            anchor.x,
+            anchor.y,
+            anchor.horizontal ? 'H' : 'V'
+        );
+    }
+*/
     std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
     std::chrono::steady_clock::time_point t2;
 
@@ -433,15 +452,15 @@ void Grid::calculateBestMove(std::string available)
 
     std::cout << "Time elapsed: " << timeElapsedDuration.count() << " seconds." << std::endl;
     message = "Done!";
-
+/*
     for(const Placement &placement : placements)
     {
         printf("[%zu,%zu,%c] %s (%d)\n", placement.x, placement.y, placement.horizontal ? 'H' : 'V',  placement.word.data(), placement.score);
     }
-
+*/
     if(!placements.empty())
     {
-	const Placement &highest_score = *placements.rbegin();
+        const Placement &highest_score = *placements.rbegin();
         this->insert(highest_score.x, highest_score.y, highest_score.horizontal, highest_score.letters);
     }
 }

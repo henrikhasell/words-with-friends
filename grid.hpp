@@ -42,9 +42,48 @@ public:
             score(score)
         {}
 
+        std::string serialise() const
+        {
+            return
+                std::to_string((char)score) + ' ' +
+                std::to_string((char)x) + ' ' +
+                std::to_string((char)y) + ' ' +
+                (horizontal ? 'H' : 'V') + ' ' +
+                word;
+        }
+
+        // There has got to be a better way!
+        // https://stackoverflow.com/questions/32218118/c-std-set-insert-not-working
+
         bool operator<(const Placement &right) const
         {
-            return score < right.score || (score == right.score && word < right.word);
+            if(score <= right.score)
+            {
+                if(score < right.score)
+                {
+                    return true;
+                }
+                if(word <= right.word)
+                {
+                    if(word < right.word)
+                    {
+                        return true;
+                    }
+                }
+
+                const size_t L = x + 256 * y;
+                const size_t R = right.x + 256 * right.y;
+
+                if(L <= R)
+                {
+                    if(L < R || horizontal < right.horizontal)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         const size_t x;
