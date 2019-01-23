@@ -60,25 +60,17 @@ public:
             if(score <= right.score)
             {
                 if(score < right.score)
-                {
                     return true;
-                }
-                if(word <= right.word)
-                {
-                    if(word < right.word)
-                    {
-                        return true;
-                    }
-                }
 
-                const size_t L = x + 256 * y;
-                const size_t R = right.x + 256 * right.y;
-
-                if(L <= R)
+                if(horizontal <= right.horizontal)
                 {
-                    if(L < R || horizontal < right.horizontal)
-                    {
+                    if(horizontal < right.horizontal)
                         return true;
+
+                    if(word <= right.word)
+                    {
+                        if(word < right.word || x + 256 * y < right.x + 256 * right.y)
+                            return true;
                     }
                 }
             }
