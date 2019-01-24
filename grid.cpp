@@ -188,7 +188,7 @@ Grid::Tile *Grid::getTile(size_t x, size_t y) const
 }
 
 
-void Grid::insert(size_t x, size_t y, bool horizontal, std::string word)
+void Grid::insert(size_t x, size_t y, bool horizontal, const std::string &word)
 {
     size_t *i;
     size_t i_max;

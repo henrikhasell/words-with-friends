@@ -42,16 +42,6 @@ public:
             score(score)
         {}
 
-        std::string serialise() const
-        {
-            return
-                std::to_string((char)score) + ' ' +
-                std::to_string((char)x) + ' ' +
-                std::to_string((char)y) + ' ' +
-                (horizontal ? 'H' : 'V') + ' ' +
-                word;
-        }
-
         // There has got to be a better way!
         // https://stackoverflow.com/questions/32218118/c-std-set-insert-not-working
 
@@ -112,7 +102,16 @@ public:
     Grid &operator=(const Grid &grid);
 
     Tile *getTile(size_t x, size_t y) const;
-    void insert(size_t x, size_t y, bool horizontal, std::string word);
+    void insert(size_t x, size_t y, bool horizontal, const std::string &word);
+
+    // TODO
+    void insertPermutation(
+        size_t x,
+        size_t y,
+        bool horizontal,
+        const std::string &permutation,
+        std::set<Placement> &placements) const;
+
     void fetch(size_t x, size_t y, bool horizontal, std::string &word) const;
     bool check(size_t x, size_t y, bool horizontal) const;
     std::set<Placement> calculatePlacements(std::string characters) const;

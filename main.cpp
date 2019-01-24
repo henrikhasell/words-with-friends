@@ -246,9 +246,6 @@ int main(int argc, char *argv[])
                                 input.pop_back();
                             }
                             break;
-                        case SDLK_INSERT:
-                            grid.insert(cursor_x, cursor_y, false, input);
-                            break;
                         }
                     }
 
