@@ -266,6 +266,8 @@ void Grid::fetch(size_t x, size_t y, bool horizontal, std::string &word) const
 
 bool Grid::check(size_t x, size_t y, bool horizontal) const
 {
+    bool connected = false;
+
     std::string word;
     fetch(x, y, horizontal, word);
 
@@ -290,7 +292,9 @@ bool Grid::check(size_t x, size_t y, bool horizontal) const
 
     for(size_t index = 0; index < word.length() && *i < i_max; index++)
     {
-        if(getTile(x, y)->cross_check)
+        const Tile *tile = getTile(x, y);
+
+        if(tile->cross_check)
         {
             std::string word;
             fetch(x, y, !horizontal, word);
@@ -299,10 +303,16 @@ bool Grid::check(size_t x, size_t y, bool horizontal) const
                 return false;
             }
         }
+
+        if(!tile->cross_check || tile->type == Tile::Type::Start)
+        {
+            connected = true;
+        }
+
         i[0]++;
     }
 
-    return true;
+    return connected;
 }
 
 void Grid::calculateAnchors(std::vector<Anchor> &anchors) const
@@ -358,7 +368,7 @@ std::set<Grid::Placement> Grid::calculatePlacements(std::string available) const
     {
         for(const Anchor &anchor : anchors)
         {
-            for(size_t i = 0; i < letters.length(); i++)
+            for(size_t i = 0; i <= letters.length(); i++)
             {
                 size_t x;
                 size_t y;
@@ -443,21 +453,20 @@ void Grid::calculateBestMove(std::string available)
     std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
     std::chrono::steady_clock::time_point t2;
 
-    t2 = std::chrono::steady_clock::now();
-
     std::set<Placement> placements = calculatePlacements(available);
+    t2 = std::chrono::steady_clock::now();
 
     std::chrono::duration<double> timeElapsedDuration =
         std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
 
     std::cout << "Time elapsed: " << timeElapsedDuration.count() << " seconds." << std::endl;
     message = "Done!";
-/*
+
     for(const Placement &placement : placements)
     {
         printf("[%zu,%zu,%c] %s (%d)\n", placement.x, placement.y, placement.horizontal ? 'H' : 'V',  placement.word.data(), placement.score);
     }
-*/
+
     if(!placements.empty())
     {
         const Placement &highest_score = *placements.rbegin();
