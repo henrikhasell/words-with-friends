@@ -169,19 +169,6 @@ Grid::~Grid()
     delete[] tiles;
 }
 
-Grid &Grid::operator=(const Grid &grid)
-{
-    delete[] tiles;
-    w = grid.w;
-    h = grid.h;
-    tiles = new Tile[w * h];
-    for(size_t i = 0; i < w * h; i++)
-    {
-        tiles[i] = grid.tiles[i];
-    }
-    return *this;
-}
-
 Grid::Tile *Grid::getTile(size_t x, size_t y) const
 {
     return tiles + x + w * y;
@@ -315,7 +302,7 @@ bool Grid::check(size_t x, size_t y, bool horizontal) const
     return connected;
 }
 
-void Grid::calculateAnchors(std::vector<Anchor> &anchors) const
+void Grid::calculateAnchors(std::set<Anchor> &anchors) const
 {
     for(size_t x = 0; x < w; x++)
     {
@@ -325,11 +312,11 @@ void Grid::calculateAnchors(std::vector<Anchor> &anchors) const
             {
                 if(x == 0 || getTile(x - 1, y)->value == ' ')
                 {
-                    anchors.emplace_back(x, y, true);
+                    anchors.emplace(x, y, true);
                 }
                 if(y == 0 || getTile(x, y - 1)->value == ' ')
                 {
-                    anchors.emplace_back(x, y, false);
+                    anchors.emplace(x, y, false);
                 }
             }
 	    else
@@ -337,12 +324,12 @@ void Grid::calculateAnchors(std::vector<Anchor> &anchors) const
                if(x > 0 && getTile(x - 1, y)->value != ' ' ||
                   x < w - 1  && getTile(x + 1, y)->value != ' ')
 	       {
-                    anchors.emplace_back(x, y, false);
+                    anchors.emplace(x, y, false);
 	       }
                if(y > 0 && getTile(x, y - 1)->value != ' ' ||
                   y < h - 1 && getTile(x, y + 1)->value != ' ')
 	       {
-                    anchors.emplace_back(x, y, true);
+                    anchors.emplace(x, y, true);
 	       }
 	    }
         }
@@ -350,16 +337,23 @@ void Grid::calculateAnchors(std::vector<Anchor> &anchors) const
 
     if(anchors.empty())
     {
-        anchors.emplace_back(w / 2, h / 2, true);
-        anchors.emplace_back(w / 2, h / 2, false);
+        anchors.emplace(w / 2, h / 2, true);
+        anchors.emplace(w / 2, h / 2, false);
     }
+
+    printf("==========\n");
+    for(auto anchor : anchors) {
+        printf("A: [%zu,%zu,%c]\n", anchor.x, anchor.y, anchor.horizontal ? 'H' : 'V');
+    }
+    printf("==========\n");
+
 }
 
 std::set<Grid::Placement> Grid::calculatePlacements(std::string available) const
 {
     std::set<Placement> placements;
 
-    std::vector<Anchor> anchors;
+    std::set<Anchor> anchors;
     calculateAnchors(anchors);
 
     Permutation permutation(available);
@@ -369,7 +363,7 @@ std::set<Grid::Placement> Grid::calculatePlacements(std::string available) const
         for(const Anchor &anchor : anchors)
         {
             for(size_t i = 0; i <= letters.length(); i++)
-            {
+            {// this is fucking up placements. find out why.
                 size_t x;
                 size_t y;
 
@@ -412,16 +406,7 @@ std::set<Grid::Placement> Grid::calculatePlacements(std::string available) const
                     copy.fetch(x, y, anchor.horizontal, word);
 
                     const int score = copy.score(x, y, anchor.horizontal);
-/*
-                    printf(
-                        "Inserting [%zu,%zu,%c] %s (%d)\n",
-                        x,
-                        y,
-                        anchor.horizontal ? 'H' : 'V',
-                        word.data(),
-                        score
-                    );
-*/
+\
                     if(score)
                     {
                         placements.emplace(x, y, anchor.horizontal, word, letters, score);
@@ -437,9 +422,10 @@ std::set<Grid::Placement> Grid::calculatePlacements(std::string available) const
 
 void Grid::calculateBestMove(std::string available)
 {
-    std::vector<Anchor> anchors;
-    calculateAnchors(anchors);
 /*
+    std::set<Anchor> anchors;
+    calculateAnchors(anchors);
+
     for(const Anchor &anchor : anchors)
     {
         printf(
@@ -462,10 +448,19 @@ void Grid::calculateBestMove(std::string available)
     std::cout << "Time elapsed: " << timeElapsedDuration.count() << " seconds." << std::endl;
     message = "Done!";
 
+    printf("===========\n");
     for(const Placement &placement : placements)
     {
-        printf("[%zu,%zu,%c] %s (%d)\n", placement.x, placement.y, placement.horizontal ? 'H' : 'V',  placement.word.data(), placement.score);
+        printf("P: [%zu,%zu,%c] word: %s letters: %s (%d)\n",
+            placement.x,
+            placement.y,
+            placement.horizontal ? 'H' : 'V',
+            placement.word.data(),
+            placement.letters.data(),
+            placement.score
+        );
     }
+    printf("===========\n");
 
     if(!placements.empty())
     {

@@ -136,6 +136,7 @@ int main(int argc, char *argv[])
             bool finished = false;
             size_t cursor_x = 0;
             size_t cursor_y = 0;
+            std::set<Grid::Anchor> anchors;
             while(!finished)
             {
                 SDL_Event e;
@@ -160,7 +161,7 @@ int main(int argc, char *argv[])
                             Grid::Tile *tile = grid.getTile(cursor_x, cursor_y);
                             tile->value = e.text.text[0];
                             tile->cross_check = false;
-			    tile->wild = false;
+			                tile->wild = false;
                             grid.validate();
                         }
                         else if(input.length() < 7)
@@ -234,6 +235,8 @@ int main(int argc, char *argv[])
                             if(input_mode == Board)
                             {
                                 grid.validate();
+                                grid.calculateAnchors(anchors);
+                                printf("Number of anchors: %d", anchors.size());
                             }
                             else
                             {
@@ -327,6 +330,18 @@ int main(int argc, char *argv[])
                         render_glyph(
                             window_surface, text_surface, i, 0,
                             16, 16, message[i]);
+                    }
+
+                    for(auto anchor : anchors) {
+                        render_glyph(
+                            window_surface,
+                            text_surface,
+                            anchor.x,
+                            anchor.y,
+                            TILE_SIZE,
+                            TILE_SIZE,
+                            anchor.horizontal ? 26 : 25
+                        );
                     }
 
                     SDL_UpdateWindowSurface(window);
