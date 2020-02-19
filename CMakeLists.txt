@@ -3,9 +3,11 @@ project("Words With Friends")
 
 add_executable(wwf
     wwf/src/grid.cpp
+    wwf/src/gui.cpp
     wwf/src/main.cpp
     wwf/src/solution.cpp
     wwf/src/trie.cpp
+    wwf/src/gui_text.cpp
 )
 
 target_include_directories(wwf PUBLIC wwf/include)
