@@ -1,5 +1,4 @@
 .idea
 cmake-build-debug
 /speed_test
-/wwf
 *.o
