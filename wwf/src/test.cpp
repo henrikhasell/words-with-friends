@@ -55,10 +55,11 @@ struct SmallGridTest : WWFTest {
 
 struct SolutionBuilderTest : GridTest {
     SolutionBuilder solutionBuilder;
-
+    Trie trie;
     SolutionBuilderTest() :
         GridTest(),
-        solutionBuilder(loadDictionary("dictionary.txt"), grid) {}
+        trie(loadDictionary("dictionary.txt")),
+        solutionBuilder(trie, grid) {}
 };
 
 struct SmallSolutionBuilderTest : SmallGridTest {
@@ -68,7 +69,7 @@ struct SmallSolutionBuilderTest : SmallGridTest {
 
     SmallSolutionBuilderTest() :
         SmallGridTest(),
-        trie(loadDictionary("dictonary.txt")),
+        trie(loadDictionary("dictionary.txt")),
         solutionBuilder(trie, grid) {}
 };
 

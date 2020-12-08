@@ -3,7 +3,7 @@ obj=$(src:.cpp=.o)
 out=wwf
 
 CXXFLAGS=-DGRID_EARLY_EXIT -fdata-sections -ffunction-sections -O3
-LDFLAGS= -lSDL2
+LDFLAGS=-lSDL2
 
 $(out): $(obj)
 	$(CXX) -o$@ $^ $(LDFLAGS)
